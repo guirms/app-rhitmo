@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estaciona fácil</title>
+</head>
+
+<body>
+    <section class="altura-15">
+    </section>
+    <section class="altura-70 row">
+        <main class="box-cadastro">
+            <header class="d-flex flex-column justify-content-center mt-3">
+                <h1>Cadastre-se agora</h1>
+                <h3>e encontre sua vaga rapidamente!</h3>
+                <img src="/assets/img/logo-estaciona-facil.png" class="row mt-4" alt="Logo do site">
+            </header>
+
+            <form *ngIf="!baseService.exibeLoad" [formGroup]="cadastroForm" #formDir="ngForm"
+                (ngSubmit)="cadastroSubmit()" class="mt-3 w-75 mx-auto">
+
+                <mat-form-field appearance="fill" class="d-flex justify-content-center">
+                    <mat-label>Digite seu e-mail</mat-label>
+                    <input matInput [(ngModel)]="email" formControlName="email" required>
+                    <mat-error>E-mail inválido</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="d-flex justify-content-center">
+                    <mat-label>Digite sua senha</mat-label>
+                    <input matInput [type]="exibeSenha ? 'text' : 'password'" [(ngModel)]="senha"
+                        formControlName="senha" required>
+                    <mat-error>Senha inválida</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="d-flex justify-content-center">
+                    <mat-label>Repita a senha</mat-label>
+                    <input matInput [type]="exibeSenha ? 'text' : 'password'" [(ngModel)]="confirmacaoSenha"
+                        formControlName="confirmacaoSenha" required>
+                    <button type="button" mat-icon-button matSuffix (click)="exibeSenha = !exibeSenha"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="exibeSenha">
+                        <mat-icon>{{exibeSenha ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error>Senha inválida</mat-error>
+                </mat-form-field>
+                <p *ngIf="senhasSaoDiferentes()" class="mensagem-erro-formulario">As senhas não são iguais</p>
+
+                <footer class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary w-50 mb-3">Entrar</button>
+                </footer>
+            </form>
+
+            <span *ngIf="baseService.exibeLoad" class="d-flex justify-content-center mt-5">
+                <mat-spinner></mat-spinner>
+            </span>
+        </main>
+    </section>
+    <section class="altura-15">
+    </section>
+</body>
+
+</html>

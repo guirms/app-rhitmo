@@ -52,12 +52,12 @@ namespace Infra.Data.Mappings
 
             builder
                 .Property(c => c.InsertedAt)
-                .HasColumnType("datetime(0)")
+                .HasColumnType("datetime2(0)")
                 .IsRequired();
 
             builder
                 .Property(c => c.UpdatedAt)
-                .HasColumnType("datetime(0)");
+                .HasColumnType("datetime2(0)");
         }
     }
 }

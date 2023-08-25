@@ -1,5 +1,4 @@
 ﻿using Application.Objects.Requests.Usuario;
-using Application.Objects.Responses.Usuario;
 using AutoMapper;
 using Domain.Models;
 
@@ -9,21 +8,17 @@ public class AutoMapper : Profile
 {
     public AutoMapper()
     {
-        UsuarioMap();
+        CustomerMap();
     }
 
     #region Usuario
 
-    private void UsuarioMap()
+    private void CustomerMap()
     {
-        CreateMap<UsuarioCadastroRequest, Customer>();
-        
-        CreateMap<SaveCustomerRequest, UsuarioResponse>();
-        
-        CreateMap<Customer, UsuarioResponse>();
+        CreateMap<SaveCustomerRequest, Customer>()
+            .ForMember(c => c.InsertedAt, opts => opts.MapFrom(s => DateTime.Now));
     }
 
     #endregion
-    
+
 }
-    

@@ -13,7 +13,7 @@ public class ResponseBase
             Data = dataOperacao,
         });
     }
-    
+
     public static JsonResult BigJson(object data)
     {
         return new JsonResult(data);

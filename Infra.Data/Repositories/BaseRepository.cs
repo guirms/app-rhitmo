@@ -3,7 +3,7 @@ using Infra.Data.Interfaces;
 
 namespace Infra.Data.Repositories;
 
-public class BaseRepository<T>: IBaseRepository<T> where T : class
+public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     protected readonly ConfigContext _context;
 
@@ -44,12 +44,12 @@ public class BaseRepository<T>: IBaseRepository<T> where T : class
     {
         var modelObject = GetById(id);
 
-        if (modelObject != null) 
+        if (modelObject != null)
             _context.Set<T>().Remove(modelObject);
 
-        _context.SaveChanges();        
+        _context.SaveChanges();
     }
-        
+
     public void Dispose()
     {
         _context.Dispose();

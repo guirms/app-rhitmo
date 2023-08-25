@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Data.Repositories;
 
-public class CustomerRepository: BaseRepository<Customer>, ICustomerRepository
+public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
 {
     public CustomerRepository(ConfigContext contexto) : base(contexto)
     {

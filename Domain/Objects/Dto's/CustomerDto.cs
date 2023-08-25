@@ -1,5 +1,5 @@
-﻿using Domain.Models.Enums;
-using Domain.Models;
+﻿using Domain.Models;
+using Domain.Models.Enums;
 
 namespace Domain.Objects.Dto_s
 {

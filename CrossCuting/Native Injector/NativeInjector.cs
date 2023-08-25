@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Objects.Requests.Usuario;
 using Application.Services;
 using FluentValidation;
+using Infra.Auth;
 using Infra.Data.Interfaces;
 using Infra.Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public static class NativeInjector
     {
         services.AddScoped<ICustomerAppService, CustomerAppService>();
 
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICustomerService, CustomerService>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();

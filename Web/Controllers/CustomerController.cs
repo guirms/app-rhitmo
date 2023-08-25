@@ -6,29 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
-[ApiController]
-[Route("Usuario")]
+[ApiController, AllowAnonymous]
+[Route("Customer")]
 public class CustomerController : ControllerBase
 {
-    private readonly ICustomerService _usuarioService;
+    private readonly ICustomerAppService _customerAppService;
 
-    public CustomerController(ICustomerService usuarioService)
+    public CustomerController(ICustomerAppService customerAppService)
     {
-        _usuarioService = usuarioService;
+        _customerAppService = customerAppService;
     }
 
     [HttpPost("SaveCustomer")]
-    public JsonResult SaveCustomer([FromBody] SaveCustomerRequest usuarioLoginRequest)
+    public async Task<JsonResult> SaveCustomer([FromBody] SaveCustomerRequest usuarioLoginRequest)
     {
         try
         {
-            _usuarioService.SaveCustomer(usuarioLoginRequest);
+            await _customerAppService.SaveCustomer(usuarioLoginRequest);
 
-            return ResponseBase.ResponderController(true, "Customer entered successfully");
+            return ResponseBase.ResponderController(true, "Cliente inserido com sucesso");
         }
         catch (Exception e)
         {
-            return ResponseBase.ResponderController(false, "Error inserting customer: ", e.Message);
+            return ResponseBase.ResponderController(false, $"Error ao inserir cliente: {e.Message}");
         }
     }
 }

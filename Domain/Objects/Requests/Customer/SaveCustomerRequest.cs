@@ -25,7 +25,7 @@ public class SaveCustomerRequest
     {
         public SaveCustomerRequestValidator()
         {
-            RuleFor(x => x.Email)
+            RuleFor(x => x.Cpf)
                 .NotEmpty()
                 .Must(HaveValidCpf)
                 .WithMessage("CPF inválido");
@@ -45,7 +45,8 @@ public class SaveCustomerRequest
             string? tempCpf = cpf.Substring(0, 9);
             var sum = 0;
 
-            for (var i = 0; i < 9; i++) { 
+            for (var i = 0; i < 9; i++)
+            {
                 sum += int.Parse(tempCpf[i].ToString()) * multiplier1[i];
             }
 
@@ -58,7 +59,8 @@ public class SaveCustomerRequest
             string? digit = remainder.ToString();
             tempCpf += digit;
             sum = 0;
-            for (var i = 0; i < 10; i++) { 
+            for (var i = 0; i < 10; i++)
+            {
                 sum += int.Parse(tempCpf[i].ToString()) * multiplier2[i];
             }
 

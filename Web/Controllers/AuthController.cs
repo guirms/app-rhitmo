@@ -7,21 +7,21 @@ namespace Web.Controllers;
 
 [ApiController]
 [Route("Token")]
-public class AuthController: ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly IAutenticacaoService _autenticacaoService;
-    public AuthController(IAutenticacaoService autenticacaoService)
+    private readonly IAuthService _authService;
+    public AuthController(IAuthService authService)
     {
-        _autenticacaoService = autenticacaoService;
+        _authService = authService;
     }
-    
+
     [HttpPost("GerarTokenSessao")]
-    public JsonResult GerarTokenSessao(AuthTokenRequest autenticacaoTokenRequest)
+    public JsonResult GenerateSessionToken(AuthTokenRequest authTokenRequest)
     {
         try
         {
-            var token = _autenticacaoService.GerarTokenSessao(autenticacaoTokenRequest.Email, _autenticacaoService.GerarSenhaHashMd5(autenticacaoTokenRequest.Senha));
-         
+            var token = _authService.GenerateSessionToken(authTokenRequest.Email);
+
             return ResponseBase.ResponderController(true, "Token gerado com sucesso", token);
         }
         catch (Exception e)

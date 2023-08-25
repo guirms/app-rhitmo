@@ -1,13 +1,13 @@
-using System.Text;
 using CrossCuting.Native_Injector;
+using Domain.Helper;
 using Infra.Data.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using Web.Filters;
-using Domain.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Entity Framework
-builder.Services.AddDbContext<ConfigContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("EstacionaFacilDb") ?? string.Empty).EnableSensitiveDataLogging());
+builder.Services.AddDbContext<ConfigContext>(opt => opt
+.UseSqlServer(configuration.GetConnectionString("RhitmoDb") ?? string.Empty, b => b.MigrationsAssembly("Infra.Data"))
+.EnableSensitiveDataLogging()); ;
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Application.AutoMapper.AutoMapper));
@@ -87,7 +89,8 @@ builder.Services.AddAuthorization(auth =>
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -97,6 +100,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Dependency Injector
+NativeInjector.RegisterServices(builder.Services);
 
 var app = builder.Build();
 

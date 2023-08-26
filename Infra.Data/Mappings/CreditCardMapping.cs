@@ -21,7 +21,7 @@ namespace Infra.Data.Mappings
 
             builder
                 .Property(c => c.Number)
-                .HasMaxLength(16)
+                .HasMaxLength(200)
                 .IsRequired();
 
             builder

@@ -5,6 +5,7 @@ using Domain.Models;
 using Domain.Models.Enums;
 using Domain.Objects.Responses;
 using Infra.Data.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Services;
 
@@ -12,11 +13,13 @@ public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
 
-    public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
+    public CustomerService(ICustomerRepository customerRepository, IMapper mapper, IConfiguration configuration)
     {
         _customerRepository = customerRepository;
         _mapper = mapper;
+        _configuration = configuration;
     }
 
     public Task<List<CustomersToGridResponse>> GetCustomersToGrid() => _customerRepository.GetCustomersToGrid();

@@ -55,7 +55,7 @@ public class CustomerController : ControllerBase
     {
         try
         {
-            await _customerService.UpdateCustomer(updateCustomerRequest, customerId);
+            await _customerAppService.UpdateCustomer(updateCustomerRequest, customerId);
 
             return ResponseBase.DefaultResponse(true, "Cliente atualizado com sucesso");
         }

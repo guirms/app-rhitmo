@@ -1,0 +1,54 @@
+<header class="header">
+    <img src="/assets/img/logo-rhitmo.png" class="header--logo" alt="Logo da Rhitmo">
+    <p class="header--title">Lista o cadastro</p>
+</header>
+
+<section class="title-page">
+    <p class="title-page--text">Lista</p>
+</section>
+
+<body>
+    <main class="main-content">
+        <div class="grid-title-container">
+            <p class="grid-title-container--text">Lista de cliente</p>
+        </div>
+
+        <div class="search-customer-container">
+            <label for="customerName">Nome do cliente</label>
+            <input type="text" class="search-customer-container--input" placeholder="Digite seu nome">
+        </div>
+
+        <div class="table-container">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>CPF</th>
+                        <th>Criado em</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>João da Silva</td>
+                        <td>joao@example.com</td>
+                        <td>123.456.789-00</td>
+                        <td>2023-08-26</td>
+                    </tr>
+                    <tr>
+                        <td>Maria Souza</td>
+                        <td>maria@example.com</td>
+                        <td>987.654.321-00</td>
+                        <td>2023-08-25</td>
+                    </tr>
+                    <tr class="input-row">
+                        <td><input type="text" placeholder="Exemplo de nome"></td>
+                        <td><input type="email" placeholder="exemplo@mail.com"></td>
+                        <td><input type="text" placeholder="000.000.000-00"></td>
+                        <td><input type="text" placeholder="00/00/0000" onfocus="this.type='date'" onblur="this.type='text'"></td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { CadastroModel } from 'src/app/Interfaces/cadastro/cadastro-model';
-import { ResponseBaseModel } from 'src/app/Interfaces/response-base/response-base-model';
+import { CadastroModel } from 'src/app/interfaces/cadastro/cadastro-model';
+import { ResponseBaseModel } from 'src/app/interfaces/response-base/response-base-model';
 import { environment } from 'src/environments/environment';
 import { BaseService } from '../base/base.service';
 

@@ -1,32 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AutenticacaoGuard } from './Guardas/autenticacao/autenticacao.guard';
-import { TelaCadastroComponent } from './Paginas/tela-cadastro/tela-cadastro.component';
-import { TelaLoginComponent } from './Paginas/tela-login/tela-login.component';
-import { TelaPrincipalComponent } from './Paginas/tela-principal/tela-principal.component';
+import { TelaCadastroComponent } from './pages/tela-cadastro/tela-cadastro.component';
+import { MainScreenComponent } from './pages/main-screen/main-screen.component';
 
 const routes: Routes = [
   {
     path: '', 
     pathMatch: 'full',
-    component: TelaLoginComponent
-  },
-  {
-    path: 'login',
-    component: TelaLoginComponent
+    component: MainScreenComponent
   },
   {
     path: 'cadastro', 
     component: TelaCadastroComponent
   },
   {
-    path: 'principal', 
-    component: TelaPrincipalComponent,
-    canActivate: [AutenticacaoGuard]
+    path: '', 
+    component: MainScreenComponent
   },
   {
     path: '**', 
-    component: TelaLoginComponent
+    component: TelaCadastroComponent
   },
 ];
 

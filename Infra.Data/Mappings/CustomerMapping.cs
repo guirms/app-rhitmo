@@ -15,6 +15,11 @@ namespace Infra.Data.Mappings
                 .HasKey(c => c.CustomerId);
 
             builder
+                .Property(c => c.Name)
+                .HasMaxLength(70)
+                .IsRequired();
+
+            builder
                 .Property(c => c.Email)
                 .HasMaxLength(70)
                 .IsRequired();

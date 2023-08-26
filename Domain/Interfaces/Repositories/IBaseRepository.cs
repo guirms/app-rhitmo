@@ -2,10 +2,8 @@
 
 public interface IBaseRepository<T> : IDisposable where T : class
 {
-    int Save(T modelObject);
-    Task<int> SaveAsync(T modelObject);
-    int Update(T modelObject);
-    T? GetById(int id);
-    IList<T> GetAll();
-    void Delete(int id);
+    Task SaveAsync(T modelObject);
+    Task UpdateAsync(T modelObject);
+    Task<T?> GetByIdAsync(int id);
+    Task DeleteAsync(int id);
 }

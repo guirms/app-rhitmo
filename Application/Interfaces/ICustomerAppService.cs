@@ -4,5 +4,5 @@ namespace Application.Interfaces;
 
 public interface ICustomerAppService
 {
-    Task SaveCustomer(SaveCustomerRequest saveCustomerRequest);
+    Task SaveCustomer(AddCustomerRequest saveCustomerRequest);
 }

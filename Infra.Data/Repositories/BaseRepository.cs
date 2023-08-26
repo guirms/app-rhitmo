@@ -12,42 +12,31 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _context = context;
     }
 
-    public int Save(T modelObject)
+    public async Task SaveAsync(T modelObject)
     {
         _context.Set<T>().Add(modelObject);
-        return _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<int> SaveAsync(T modelObject)
-    {
-        _context.Set<T>().Add(modelObject);
-        return await _context.SaveChangesAsync();
-    }
-
-    public int Update(T modelObject)
+    public async Task UpdateAsync(T modelObject)
     {
         _context.Set<T>().Update(modelObject);
-        return _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public T? GetById(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        return _context.Set<T>().Find(id);
+        return await _context.Set<T>().FindAsync(id);
     }
 
-    public IList<T> GetAll()
+    public async Task DeleteAsync(int id)
     {
-        return _context.Set<T>().ToList();
-    }
-
-    public void Delete(int id)
-    {
-        var modelObject = GetById(id);
+        var modelObject = await GetByIdAsync(id);
 
         if (modelObject != null)
             _context.Set<T>().Remove(modelObject);
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
     public void Dispose()

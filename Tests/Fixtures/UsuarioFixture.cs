@@ -15,7 +15,7 @@ public class UsuarioFixture : TestsSetup
     protected CustomerService _usuarioService;
     protected readonly Mock<ICustomerRepository> UsuarioRepositoryMock;
     protected readonly Mock<IAuthService> AutenticacaoServiceMock;
-    protected readonly Mock<IValidator<SaveCustomerRequest>> UsuarioLoginValidatorMock = new();
+    protected readonly Mock<IValidator<AddCustomerRequest>> UsuarioLoginValidatorMock = new();
 
     public UsuarioFixture()
     {

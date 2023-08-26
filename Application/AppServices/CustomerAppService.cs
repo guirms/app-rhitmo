@@ -7,15 +7,15 @@ namespace Application.AppServices
     public class CustomerAppService : ICustomerAppService
     {
         private readonly ICustomerService _customerService;
-        private readonly IValidator<SaveCustomerRequest> _usuarioLoginRequestValidator;
+        private readonly IValidator<AddCustomerRequest> _usuarioLoginRequestValidator;
 
-        public CustomerAppService(IValidator<SaveCustomerRequest> usuarioLoginRequestValidator, ICustomerService customerService)
+        public CustomerAppService(IValidator<AddCustomerRequest> usuarioLoginRequestValidator, ICustomerService customerService)
         {
             _usuarioLoginRequestValidator = usuarioLoginRequestValidator;
             _customerService = customerService;
         }
 
-        public async Task SaveCustomer(SaveCustomerRequest saveCustomerRequest)
+        public async Task SaveCustomer(AddCustomerRequest saveCustomerRequest)
         {
             var usuarioCadastroRequestValidateResult = _usuarioLoginRequestValidator.Validate(saveCustomerRequest);
 

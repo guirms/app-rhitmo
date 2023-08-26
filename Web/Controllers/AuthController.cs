@@ -10,6 +10,7 @@ namespace Web.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+
     public AuthController(IAuthService authService)
     {
         _authService = authService;
@@ -22,11 +23,11 @@ public class AuthController : ControllerBase
         {
             var token = _authService.GenerateSessionToken(authTokenRequest.Email);
 
-            return ResponseBase.ResponderController(true, "Token gerado com sucesso", token);
+            return ResponseBase.DefaultResponse(true, "Token gerado com sucesso", token);
         }
         catch (Exception e)
         {
-            return ResponseBase.ResponderController(false, $"Erro ao gerar token: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao gerar token: {e.Message}");
         }
     }
 }

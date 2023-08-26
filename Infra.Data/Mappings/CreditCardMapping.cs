@@ -26,7 +26,7 @@ namespace Infra.Data.Mappings
 
             builder
                 .Property(c => c.ExpirationDate)
-                .HasColumnType("datetime2(0)")
+                .HasColumnType("date")
                 .IsRequired();
 
             builder

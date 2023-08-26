@@ -7,7 +7,7 @@ using Infra.Auth;
 using Infra.Data.Interfaces;
 using Infra.Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using static Application.Objects.Requests.Usuario.SaveCustomerRequest;
+using static Application.Objects.Requests.Usuario.AddCustomerRequest;
 
 namespace CrossCuting.Native_Injector;
 
@@ -22,6 +22,6 @@ public static class NativeInjector
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
 
-        services.AddScoped<IValidator<SaveCustomerRequest>, SaveCustomerRequestValidator>();
+        services.AddScoped<IValidator<AddCustomerRequest>, SaveCustomerRequestValidator>();
     }
 }

@@ -1,54 +1,83 @@
-<header class="header">
-    <img src="/assets/img/logo-rhitmo.png" class="header--logo" alt="Logo da Rhitmo">
-    <p class="header--title">Lista o cadastro</p>
-</header>
-
-<section class="title-page">
-    <p class="title-page--text">Lista</p>
-</section>
-
 <body>
-    <main class="main-content">
-        <div class="grid-title-container">
-            <p class="grid-title-container--text">Lista de cliente</p>
-        </div>
+    <header class="header">
+        <img src="/assets/img/logo-rhitmo.png" class="header--logo" alt="Logo da Rhitmo">
+        <p class="header--title">Lista o cadastro</p>
+    </header>
 
-        <div class="search-customer-container">
-            <label for="customerName">Nome do cliente</label>
-            <input type="text" class="search-customer-container--input" placeholder="Digite seu nome">
-        </div>
+    <section class="title-page">
+        <p class="title-page--text">Lista</p>
+    </section>
 
-        <div class="table-container">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>CPF</th>
-                        <th>Criado em</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>joao@example.com</td>
-                        <td>123.456.789-00</td>
-                        <td>2023-08-26</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Souza</td>
-                        <td>maria@example.com</td>
-                        <td>987.654.321-00</td>
-                        <td>2023-08-25</td>
-                    </tr>
-                    <tr class="input-row">
-                        <td><input type="text" placeholder="Exemplo de nome"></td>
-                        <td><input type="email" placeholder="exemplo@mail.com"></td>
-                        <td><input type="text" placeholder="000.000.000-00"></td>
-                        <td><input type="text" placeholder="00/00/0000" onfocus="this.type='date'" onblur="this.type='text'"></td>
-                      </tr>
-                </tbody>
-            </table>
+    <main>
+        <div class="page-body">
+            <div class="grid-title-container">
+                <p class="grid-title-container--text">Lista de cliente</p>
+            </div>
+
+            <div class="search-customer-container">
+                <label for="customerName">Nome do cliente</label>
+                <input type="text" class="search-customer-container--input" placeholder="Digite seu nome">
+            </div>
+
+            <div class="table-container">
+                <table class="table-container__customer-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>CPF</th>
+                            <th>Criado em</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João da Silva paulo pinto maritaca</td>
+                            <td>joao@example.com</td>
+                            <td>123.456.789-00</td>
+                            <td>2023-08-26</td>
+                            <svg class="table-container__customer-table--btn-edit" xmlns="http://www.w3.org/2000/svg"
+                                width="33" height="33" viewBox="0 0 33 33" fill="none">
+                                <circle cx="16.5" cy="16.5" r="16.5" fill="#D9D9D9" />
+                                <path
+                                    d="M11.0674 11.8304L12.8047 10.0932C13.5967 9.30115 13.9927 8.90514 14.4494 8.75676C14.8511 8.62624 15.2838 8.62624 15.6854 8.75676C16.1421 8.90514 16.5381 9.30115 17.3301 10.0932L18.0674 10.8306M14.0674 14.8304L18.0674 18.8304M13.5674 23.3307C14.2254 22.6726 20.7114 16.1867 24.0714 12.8267C25.176 11.7221 25.172 9.93519 24.0674 8.83055C22.9628 7.72585 21.1758 7.72182 20.0711 8.82648C16.7111 12.1866 10.2253 18.6723 9.56731 19.3303C7.78272 21.1147 6.71382 25.4768 7.06731 25.8303C7.42079 26.1838 11.7281 25.17 13.5674 23.3307Z"
+                                    stroke="#131A29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <svg class="table-container__customer-table--btn-remove" xmlns="http://www.w3.org/2000/svg"
+                                width="33" height="33" viewBox="0 0 33 33" fill="none">
+                                <circle cx="16.5" cy="16.5" r="16.5" fill="#D9D9D9" />
+                                <path
+                                    d="M8 11H24M20 11L19.7294 10.1881C19.4671 9.40125 19.3359 9.00784 19.0927 8.71698C18.8779 8.46013 18.6021 8.26132 18.2905 8.13878C17.9376 8 17.523 8 16.6936 8H15.3064C14.477 8 14.0624 8 13.7095 8.13878C13.3979 8.26132 13.1221 8.46013 12.9073 8.71698C12.6641 9.00784 12.5329 9.40125 12.2706 10.1881L12 11M22 11V21.2C22 22.8802 22 23.7202 21.673 24.362C21.3854 24.9265 20.9265 25.3854 20.362 25.673C19.7202 26 18.8802 26 17.2 26H14.8C13.1198 26 12.2798 26 11.638 25.673C11.0735 25.3854 10.6146 24.9265 10.327 24.362C10 23.7202 10 22.8802 10 21.2V11M18 15V22M14 15V22"
+                                    stroke="#131A29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </tr>
+                        <tr>
+                            <td>Maria Souza</td>
+                            <td>maria@example.com</td>
+                            <td>987.654.321-00</td>
+                            <td>2023-08-25</td>
+                        </tr>
+                        <tr class="input-row">
+                            <td><input type="text" placeholder="Exemplo de nome"></td>
+                            <td><input type="email" placeholder="exemplo@mail.com"></td>
+                            <td><input type="text" placeholder="000.000.000-00"></td>
+                            <td><input type="text" placeholder="00/00/0000" onfocus="this.type='date'"
+                                    onblur="this.type='text'"></td>
+                            <svg (click)="baseService.navigate('cadastro')" class="table-container__customer-table--btn-add" xmlns="http://www.w3.org/2000/svg"
+                                width="33" height="33" viewBox="0 0 33 33" fill="none">
+                                <circle cx="16.5" cy="16.5" r="16.5" fill="#D9D9D9" />
+                                <path d="M16.364 26.364L16.364 8.36397" stroke="#131A29" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M25.364 17.364L7.36395 17.364" stroke="#131A29" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
+
+    <footer class="footer">
+        <p class="footer--text">Guilherme Machado Santana - 2022</p>
+    </footer>
 </body>

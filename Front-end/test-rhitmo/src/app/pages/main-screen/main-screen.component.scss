@@ -3,20 +3,21 @@ $header-title-color: #FFFFFF;
 $title-page-background-color: #D9D9D9;
 $main-text-color: #000000;
 $main-title-color: #377DC0;
+$table-border-color: #77A7D4;
 
-$default-font: 'Koh Santepheap', serif;
+$main-font: 'Koh Santepheap', serif;
 $header-title-font: 'Inter', sans-serif;
 
-$default-font-size: 24px;
+$main-font-size: 24px;
 $title-page-font-size: 64px;
 
-$default-font-weight: 400;
+$main-font-weight: 400;
 
 * {
     color: $main-text-color;
-    font-family: $default-font;
-    font-size: $default-font-size;
-    font-weight: $default-font-weight;
+    font-family: $main-font;
+    font-size: $main-font-size;
+    font-weight: $main-font-weight;
 }
 
 input {
@@ -26,6 +27,12 @@ input {
     &:focus {
         outline: none;
     }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .header {
@@ -57,19 +64,20 @@ input {
     justify-content: center;
 
     &--text {
-        padding-top: 71px;
+        padding-top: 34px;
         width: 70%;
         font-size: $title-page-font-size;
     }
 }
 
-body {
+main {
     display: flex;
     justify-content: center;
+    flex: 1;
 }
 
-.main-content {
-    width: 70%;
+.page-body {
+    width: 70vw;
     margin-top: 62px;
 }
 
@@ -99,43 +107,81 @@ body {
 }
 
 .table-container {
-    overflow-x: auto;
-    width: 99.93%;
+    position: relative;
+    width: 100%;
+
+    &__customer-table {
+        width: inherit;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding-left: 42px;
+            border: 1px solid $table-border-color;
+        }
+
+        tbody tr {
+            height: 44px;
+
+            &.input-row {
+                input {
+                    width: 99%;
+                    height: 100%;
+                    background-color: transparent;
+                }
+
+                input[type="date"]::-webkit-inner-spin-button,
+                input[type="date"]::-webkit-calendar-picker-indicator {
+                    display: none;
+                    -webkit-appearance: none;
+                }
+            }
+
+            td:last-child {
+                width: 25vh;
+            }
+        }
+
+        &--btn-edit {
+            cursor: pointer;
+            position: absolute;
+            margin-left: 26px;
+            margin-top: 5px;
+        }
+
+        &--btn-remove {
+            cursor: pointer;
+            position: absolute;
+            margin-left: 68px;
+            margin-top: 5px;
+        }
+
+        &--btn-add {
+            cursor: pointer;
+            position: absolute;
+            margin-left: 26px;
+            margin-top: 5px;
+        }
+    }
 }
 
-.custom-table {
-    width: inherit;
-    border-collapse: collapse;
+.footer {
+    min-height: 137px;
+    background-color: $header-footer-color;
+    display: flex;
+    align-items: center;
 
-    th,
-    td {
-        padding-left: 42px;
-        border: 1px solid #77A7D4;
+    &--text {
+        color: $title-page-background-color;
+        font-size: 24px;
+        font-weight: 700;
+        margin-left: 32px;
+        margin-top: 10px;
     }
+}
 
-    tbody tr {
-        height: 44px;
-
-        &:nth-child(even) {
-            background-color: #F5F5F5;
-        }
-
-        &.input-row {
-            input {
-                width: 99%;
-                height: 100%;
-                background-color: transparent;
-            }
-
-            input[type="date"]::-webkit-inner-spin-button,
-            input[type="date"]::-webkit-calendar-picker-indicator {
-                display: none;
-                -webkit-appearance: none;
-            }
-        }
-
-        td:last-child {
-            width: 25%;
-          }
+@media only screen and (max-width: 1050px) {
+    .table-container {
+        overflow-x: auto;
     }
 }

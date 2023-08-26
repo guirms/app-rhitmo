@@ -1,0 +1,110 @@
+$header-footer-color: #0A0A3C;
+$header-title-color: #FFFFFF;
+$title-page-background-color: #D9D9D9;
+$main-text-color: #000000;
+$submit-button-color: #377DC0;
+
+$main-font: 'Koh Santepheap', serif;
+$header-title-font: 'Inter', sans-serif;
+
+$main-font-size: 24px;
+$title-page-font-size: 64px;
+
+$main-font-weight: 400;
+
+* {
+    color: $main-text-color;
+    font-family: $main-font;
+    font-size: $main-font-size;
+    font-weight: $main-font-weight;
+}
+
+input {
+    border: none;
+
+    textarea:focus,
+    &:focus {
+        outline: none;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    height: 69px;
+    padding: 0 32px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $header-footer-color;
+
+    &--logo {
+        width: 25px;
+        height: 25px;
+    }
+
+    &--title {
+        color: $header-title-color;
+        font-family: $header-title-font;
+        font-size: 18px;
+        margin-top: 10px;
+        word-spacing: 32px;
+    }
+}
+
+.title-page {
+    background-color: rgba($title-page-background-color, 0.5);
+    height: 137px;
+    display: flex;
+    justify-content: center;
+
+    &--text {
+        padding-top: 34px;
+        width: 70%;
+        font-size: $title-page-font-size;
+    }
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.form-body {
+    width: 70vw;
+    margin-top: 62px;
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 53px;
+    
+        &--input {
+            height: 63px;
+            border-radius: 6px;
+            background: rgba($title-page-background-color, 0.5);
+            margin-top: 3px;
+            padding-left: 12px;
+        }
+    }
+}
+
+.footer {
+    min-height: 137px;
+    background-color: $header-footer-color;
+    display: flex;
+    align-items: center;
+
+    &--text {
+        color: $title-page-background-color;
+        font-size: 24px;
+        font-weight: 700;
+        margin-left: 32px;
+        margin-top: 10px;
+    }
+}

@@ -1,17 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { BaseService } from 'src/app/services/base/base.service';
 
 @Component({
   selector: 'app-main-screen',
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss']
 })
-export class MainScreenComponent implements OnInit {
+export class MainScreenComponent  {
 
-  constructor() {
+  constructor(public baseService: BaseService) {
 
   }
-  ngOnInit(): void {
-    const dateInput = document.getElementById("dateInput") as HTMLInputElement;
-    dateInput.placeholder = "00/00/0000";
-  }
+
 }

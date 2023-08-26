@@ -4,14 +4,13 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CadastroModel } from 'src/app/interfaces/cadastro/cadastro-model';
 import { BaseService } from 'src/app/services/base/base.service';
-import { CadastroService } from 'src/app/services/cadastro/cadastro.service';
 
 @Component({
   selector: 'app-tela-cadastro',
   templateUrl: './tela-cadastro.component.html',
   styleUrls: ['./tela-cadastro.component.scss']
 })
-export class TelaCadastroComponent implements OnInit {
+export class TelaCadastroComponent {
 
   cadastroForm!: FormGroup;
   email!: string;
@@ -20,10 +19,8 @@ export class TelaCadastroComponent implements OnInit {
   exibeSenha!: boolean;
 
   constructor(private formBuilder: FormBuilder,
-    private cadastroService: CadastroService,
-    private router: Router,
     private toastrService: ToastrService,
-    public baseService: BaseService<CadastroModel>) {}
+    public baseService: BaseService) {}
 
   ngOnInit(): void {
     this.cadastroForm = this.formBuilder.group({
@@ -36,14 +33,13 @@ export class TelaCadastroComponent implements OnInit {
 
   async cadastroSubmit(): Promise<void> {
     if (this.cadastroForm.valid && !this.senhasSaoDiferentes()) {
-      var requisicaoLogin = await this.cadastroService.fazerCadastro(this.email, this.senha, this.confirmacaoSenha);
-      if (requisicaoLogin.sucesso) {
-        this.toastrService.success(requisicaoLogin.mensagem);
-        this.router.navigate(['login']);
-      } 
-      else {
-        this.toastrService.error(requisicaoLogin.mensagem);
-      }
+      // if (requisicaoLogin.sucesso) {
+      //   this.toastrService.success(requisicaoLogin.mensagem);
+      //   this.router.navigate(['login']);
+      // } 
+      // else {
+      //   this.toastrService.error(requisicaoLogin.mensagem);
+      // }
     }
     else {
       this.toastrService.warning('Campos digitados incorretamente');

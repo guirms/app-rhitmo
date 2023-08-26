@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TelaCadastroComponent } from './pages/tela-cadastro/tela-cadastro.component';
 import { MainScreenComponent } from './pages/main-screen/main-screen.component';
+import { CustomerRegistrationComponent } from './pages/customer-registration/customer-registration.component';
 
 export function tokenGetter() {
   return localStorage.getItem('tokenSessao');
@@ -26,6 +27,7 @@ export function tokenGetter() {
     AppComponent,
     TelaCadastroComponent,
     MainScreenComponent,
+    CustomerRegistrationComponent,
   ],
   imports: [
     BrowserModule,

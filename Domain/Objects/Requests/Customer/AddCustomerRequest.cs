@@ -14,10 +14,10 @@ public class AddCustomerRequest
     public required string Cep { get; set; }
     public required string City { get; set; }
     public EPaymentMethod PaymentMethod { get; set; }
-    public string? CardName { get; set; }
+    public string? CardHolderName { get; set; }
     public string? CardNumber { get; set; }
-    public DateTime? ExpirationDate { get; set; }
-    public string? SecurityCode { get; set; }
+    public DateTime? CardExpirationDate { get; set; }
+    public string? CardSecurityCode { get; set; }
 
     public class SaveCustomerRequestValidator : AbstractValidator<AddCustomerRequest>
     {

@@ -9,11 +9,32 @@
     </section>
 
     <main>
-        <form class="form-body">
+        <form class="form-body" [formGroup]="cadastroForm" #formDir="ngForm" (ngSubmit)="registerClient()">
             <div class="form-body__field">
-                <label for="customerName">Nome do cliente</label>
-                <input type="text" class="form-body__field--input" placeholder="Digite seu nome">
+                <label for="customerName">Nome</label>
+                <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome" formControlName="name" required>
+                <p *ngIf="validateField('name')" class="form-body__field--error-message">O nome é obrigatório</p>
             </div>
+
+            <div class="form-body__field">
+                <label for="customerEmail">Email</label>
+                <input type="text" [(ngModel)]="email" class="form-body__field--input" placeholder="Digite seu melhor e-mail" formControlName="email" required>
+                <p *ngIf="validateField('email')" class="form-body__field--error-message">O e-mail é obrigatório</p>
+                <p *ngIf="validateEmail()" class="form-body__field--error-message">E-mail inválido</p>
+            </div>
+
+            <div class="form-body__field">
+                <label for="customerCpf">Cpf</label>
+                <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input" placeholder="Digite CPF aqui" formControlName="cpf" required>
+                <p *ngIf="validateField('cpf')" class="form-body__field--error-message">O CPF é obrigatório</p>
+                <p *ngIf="validateCpf()" class="form-body__field--error-message">CPF inválido</p>
+            </div>
+
+            <section class="form-body__location">
+                a
+            </section>
+
+            <button (click)="validateField('name')">teste</button>
         </form>
     </main>
 

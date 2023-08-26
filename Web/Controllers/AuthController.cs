@@ -25,9 +25,9 @@ public class AuthController : ControllerBase
 
             return ResponseBase.DefaultResponse(true, "Token gerado com sucesso", token);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return ResponseBase.DefaultResponse(false, $"Erro ao gerar token: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao gerar token: {ex.Message}");
         }
     }
 }

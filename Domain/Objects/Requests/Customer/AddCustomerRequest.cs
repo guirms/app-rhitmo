@@ -96,13 +96,18 @@ public class AddCustomerRequest
             var multiplier1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             var multiplier2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-            cpf = cpf.Trim();
-            cpf = cpf.Replace(".", "").Replace("-", "");
+            var cleanCpf = cpf;
 
-            if (cpf.Length != 11)
+            cleanCpf.Trim();
+            cleanCpf = cpf.Replace(".", "").Replace("-", "");
+
+            if (cleanCpf.Length != cpf.Length)
                 return false;
 
-            string? tempCpf = cpf.Substring(0, 9);
+            if (cleanCpf.Length != 11)
+                return false;
+
+            string? tempCpf = cleanCpf.Substring(0, 9);
             var sum = 0;
 
             for (var i = 0; i < 9; i++)
@@ -132,12 +137,15 @@ public class AddCustomerRequest
 
             digit += remainder.ToString();
 
-            return cpf.EndsWith(digit);
+            return cleanCpf.EndsWith(digit);
         }
 
         public static bool HaveValidCep(string cep)
         {
-            string cleanCEP = Regex.Replace(cep, @"[^\d]", "");
+            var cleanCEP = Regex.Replace(cep, @"[^\d]", "");
+
+            if (cleanCEP.Length != cep.Length)
+                return false;
 
             if (cleanCEP.Length != 8)
                 return false;

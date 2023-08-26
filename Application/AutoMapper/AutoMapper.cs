@@ -1,5 +1,7 @@
 ﻿using Application.Objects.Requests.Usuario;
+using Application.Objects.Responses.Location;
 using AutoMapper;
+using Domain.Helper;
 using Domain.Models;
 using Domain.Objects.Responses;
 
@@ -12,9 +14,9 @@ public class AutoMapper : Profile
         CustomerMap();
         CreditCardMap();
         BankSlipMap();
+        LocationMap();
     }
 
-    #region Usuario
 
     private void CustomerMap()
     {
@@ -37,7 +39,12 @@ public class AutoMapper : Profile
         CreateMap<AddCustomerRequest, BankSlip>();
     }
 
-    #endregion
+    private void LocationMap()
+    {
+        CreateMap<LocationByCepDto, LocationByCepResponse>()
+            .ForMember(l => l.Cidade, opts => opts.MapFrom(l => l.Localidade))
+            .ForMember(l => l.Estado, opts => opts.MapFrom(l => l.Uf.GetState()));
+    }
 
     #region Private methods
 

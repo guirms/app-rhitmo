@@ -4,7 +4,7 @@ namespace Application.Objects.Bases;
 
 public class ResponseBase
 {
-    public static JsonResult DefaultResponse(bool success, string message, object? objectData = null)
+    public static JsonResult DefaultResponse(bool success, string? message = null, object? objectData = null)
     {
         return BigJson(new
         {

@@ -28,9 +28,9 @@ public class CustomerController : ControllerBase
 
             return ResponseBase.DefaultResponse(true, "Tela carregada com sucesso", gridReponse);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return ResponseBase.DefaultResponse(false, $"Erro ao resgatar clientes: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao resgatar clientes: {ex.Message}");
         }
     }
 
@@ -44,9 +44,9 @@ public class CustomerController : ControllerBase
 
             return ResponseBase.DefaultResponse(true, "Cliente inserido com sucesso");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return ResponseBase.DefaultResponse(false, $"Erro ao inserir cliente: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao inserir cliente: {ex.Message}");
         }
     }
 
@@ -59,9 +59,9 @@ public class CustomerController : ControllerBase
 
             return ResponseBase.DefaultResponse(true, "Cliente atualizado com sucesso");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return ResponseBase.DefaultResponse(false, $"Erro ao atualizar cliente: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao atualizar cliente: {ex.Message}");
         }
     }
 
@@ -74,9 +74,9 @@ public class CustomerController : ControllerBase
 
             return ResponseBase.DefaultResponse(true, "Cliente deletado com sucesso");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return ResponseBase.DefaultResponse(false, $"Erro ao deletar cliente: {e.Message}");
+            return ResponseBase.DefaultResponse(false, $"Erro ao deletar cliente: {ex.Message}");
         }
     }
 }

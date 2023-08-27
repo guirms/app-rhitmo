@@ -11,7 +11,7 @@ import { SharedDataService } from 'src/app/services/shared-data/shared-data.serv
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss']
 })
-export class MainScreenComponent implements OnInit  {
+export class MainScreenComponent implements OnInit {
 
   filteredCustomer!: string;
   customersToGridList!: CustomersToGridResponse[];
@@ -23,29 +23,11 @@ export class MainScreenComponent implements OnInit  {
     private customerService: CustomerService,
     private toastrService: ToastrService,
     private sharedDataService: SharedDataService
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
     this.loadGrid()
-  }
-
-  private loadGrid(): void {
-    this.customerService.loadGrid()
-      .subscribe({
-        next: (result) => {
-          if (result.success) {
-            this.toastrService.success(result.message);
-            this.customersToGridList = result.data;
-          }
-          else {
-            this.toastrService.info(result.message);
-          }
-        },
-        error: (error) => {
-          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
-        },
-      });
   }
 
   registerCustomer(customer?: CustomersToGridResponse) {
@@ -80,6 +62,42 @@ export class MainScreenComponent implements OnInit  {
     }
 
     this.baseService.navigate('cadastro');
+  }
+
+  deleteCustomer(customerId: number) {
+    this.customerService.deleteCustomer(customerId)
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            this.loadGrid();
+            this.toastrService.success(result.message);
+          }
+          else {
+            this.toastrService.info(result.message);
+          }
+        },
+        error: (error) => {
+          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+        },
+      });
+  }
+
+  private loadGrid(): void {
+    this.customerService.loadGrid()
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            this.toastrService.success(result.message);
+            this.customersToGridList = result.data;
+          }
+          else {
+            this.toastrService.info(result.message);
+          }
+        },
+        error: (error) => {
+          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+        },
+      });
   }
 
 }

@@ -7,6 +7,7 @@ export interface DefaultResponse {
 }
 
 export interface CustomersToGridResponse {
+    customerId: number;
     name: string;
     email: string;
     cpf: string;

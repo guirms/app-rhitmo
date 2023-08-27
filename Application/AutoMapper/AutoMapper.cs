@@ -18,7 +18,6 @@ public class AutoMapper : Profile
         LocationMap();
     }
 
-
     private void CustomerMap()
     {
         CreateMap<AddCustomerRequest, Customer>();

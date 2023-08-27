@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NoContentResponse } from 'src/app/objects/interfaces/generics';
@@ -23,5 +23,11 @@ export class CustomerService {
 
   updateCustomer(updateCustomerRequest: AddCustomerRequest):Observable<NoContentResponse> {
     return this.http.post<NoContentResponse>(environment.apiUrl + 'Customer/UpdateCustomer', updateCustomerRequest);
+  }
+
+  deleteCustomer(customerId: number):Observable<NoContentResponse>  {
+    const params = new HttpParams().set('customerId', customerId);
+
+    return this.http.delete<NoContentResponse>(environment.apiUrl + 'Customer/DeleteCustomer', { params });
   }
 }

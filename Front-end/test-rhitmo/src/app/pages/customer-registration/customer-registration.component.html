@@ -9,7 +9,7 @@
     </section>
 
     <main>
-        <form class="form-body" [formGroup]="cadastroForm" #formDir="ngForm" (ngSubmit)="registerClient()">
+        <form class="form-body" [formGroup]="registerForm" #formDir="ngForm" (ngSubmit)="registerClient()">
             <div class="form-body__field">
                 <label for="customerName">Nome</label>
                 <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome"
@@ -55,7 +55,6 @@
                         </select>
                         <p *ngIf="validateState()" class="form-body__field--error-message">O estado é
                             obrigatório</p>
-                        <p *ngIf="validateCep()" class="form-body__field--error-message">Cep inválido</p>
                     </div>
                 </div>
 
@@ -71,15 +70,15 @@
 
                 <div class="form-body__location--container">
                     <div class="form-body__field">
-                        <label for="customerState">Estado</label>
-                        <select (change)="setState($event)" class="form-body__field--select"
-                            [ngStyle]="{color: state ? '#000000' : '#A9A9A9'}" formControlName="state" required>
-                            <option [value]="0">Selecione o Estado</option>
-                            <option *ngFor="let state of stateDictionary | keyvalue" [value]="state.key">{{ state.value
+                        <label for="customerCity">Cidade</label>
+                        <select (change)="setCity($event)" class="form-body__field--select"
+                            [ngStyle]="{color: city ? '#000000' : '#A9A9A9'}" formControlName="city">
+                            <option [value]="0">Selecione a Cidade</option>
+                            <option *ngFor="let city of cityDictionary | keyvalue" [value]="city.key">{{ city.value
                                 }}</option>
                         </select>
-                        <p *ngIf="validateState()" class="form-body__field--error-message">O estado é
-                            obrigatório</p>
+                        <p *ngIf="validateCity()" class="form-body__field--error-message">A cidade é
+                            obrigatória</p>
                     </div>
                 </div>
             </section>

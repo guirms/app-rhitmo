@@ -15,9 +15,4 @@ export class BaseService {
   navigate(url: string): void {
     this.router.navigateByUrl('cadastro');
   }
-
-  setarExibeLoad(estadoLoad: boolean): void {
-    this.exibeLoad = estadoLoad;
-  }
-
 }

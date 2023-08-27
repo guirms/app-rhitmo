@@ -1,81 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { CustomersToGridResponse } from 'src/app/objects/responses/CustomersToGridResponse';
 import { BaseService } from 'src/app/services/base/base.service';
+import { CustomerService } from 'src/app/services/customer/customer.service';
 
 @Component({
   selector: 'app-main-screen',
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss']
 })
-export class MainScreenComponent  {
+export class MainScreenComponent implements OnInit  {
 
   filteredCustomer!: string;
-  
-  customersToGridList: CustomersToGridResponse[] = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      cpf: "123.456.789-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      cpf: "987.654.321-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      cpf: "555.555.555-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Bob Brown",
-      email: "bob@example.com",
-      cpf: "777.888.999-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Eve White",
-      email: "eve@example.com",
-      cpf: "111.222.333-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "David Johnson",
-      email: "david@example.com",
-      cpf: "444.444.444-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Sarah Davis",
-      email: "sarah@example.com",
-      cpf: "888.888.888-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Michael Smith",
-      email: "michael@example.com",
-      cpf: "999.999.999-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "Olivia Brown",
-      email: "olivia@example.com",
-      cpf: "333.333.333-00",
-      insertedAt: "2023-08-27",
-    },
-    {
-      name: "William Taylor",
-      email: "william@example.com",
-      cpf: "666.666.666-00",
-      insertedAt: "2023-08-27",
-    },
-  ];
+  customersToGridList!: CustomersToGridResponse[];
 
-  constructor(public baseService: BaseService) {
+  constructor(public baseService: BaseService,
+    private customerService: CustomerService,
+    private toastrService: ToastrService) {
+  }
 
+  ngOnInit(): void {
+    this.loadGrid()
+  }
+
+  private loadGrid(): void {
+    this.customerService.loadGrid()
+      .subscribe({
+        next: (result) => {
+
+          if (result.success) {
+            this.toastrService.success(result.message, 'info');
+            this.customersToGridList = result.data;
+          }
+          else {
+            this.toastrService.info(result.message, 'info');
+          }
+        },
+        error: (error) => {
+          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+        },
+      });
+  }
+
+  teste() {
+    console.log(this.customersToGridList);
   }
 
 }

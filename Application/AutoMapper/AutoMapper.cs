@@ -31,7 +31,7 @@ public class AutoMapper : Profile
     {
         CreateMap<AddCustomerRequest, CreditCard>()
             .ForMember(c => c.Number, opts => opts.MapFrom(a => a.CardNumber))
-            .ForMember(c => c.Name, opts => opts.MapFrom(a => a.CardName));
+            .ForMember(c => c.Name, opts => opts.MapFrom(a => a.CardHolderName));
     }
 
     private void BankSlipMap()

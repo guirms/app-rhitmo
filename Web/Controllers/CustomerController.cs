@@ -19,14 +19,14 @@ public class CustomerController : ControllerBase
         _customerAppService = customerAppService;
     }
 
-    [HttpPost("GetCustomersToGrid")]
+    [HttpGet("GetCustomersToGrid")]
     public async Task<JsonResult> GetCustomers()
     {
         try
         {
             var gridReponse = await _customerService.GetCustomersToGrid();
 
-            return ResponseBase.DefaultResponse(true, objectData: gridReponse);
+            return ResponseBase.DefaultResponse(true, "Dados carregados com sucesso", gridReponse);
         }
         catch (Exception ex)
         {

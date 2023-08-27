@@ -50,8 +50,8 @@ public class AddCustomerRequest
                 return true;
 
             var cardNumber = request.CardNumber ?? string.Empty;
-            var expirationDate = request.ExpirationDate?.ToString("MM/yyyy") ?? string.Empty;
-            var cvv = request.SecurityCode ?? string.Empty;
+            var expirationDate = request.CardExpirationDate?.ToString("MM/yyyy") ?? string.Empty;
+            var cvv = request.CardSecurityCode ?? string.Empty;
 
             if (!Regex.IsMatch(cardNumber, @"^\d{16}$"))
                 return false;

@@ -1,6 +1,7 @@
 
 export const environment = {
   production: false,
+  apiUrl: 'http://localhost:7253/',
   months: [
     "Janeiro",
     "Fevereiro",

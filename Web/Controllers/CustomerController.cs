@@ -26,7 +26,7 @@ public class CustomerController : ControllerBase
         {
             var gridReponse = await _customerService.GetCustomersToGrid();
 
-            return ResponseBase.DefaultResponse(true, "Tela carregada com sucesso", gridReponse);
+            return ResponseBase.DefaultResponse(true, objectData: gridReponse);
         }
         catch (Exception ex)
         {

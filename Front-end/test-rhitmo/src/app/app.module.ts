@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TelaCadastroComponent } from './pages/tela-cadastro/tela-cadastro.component';
 import { MainScreenComponent } from './pages/main-screen/main-screen.component';
 import { CustomerRegistrationComponent } from './pages/customer-registration/customer-registration.component';
+import { SearchFilterPipe } from './objects/pipes/search-filter.pipe';
 
 export function tokenGetter() {
   return localStorage.getItem('tokenSessao');
@@ -28,6 +29,7 @@ export function tokenGetter() {
     TelaCadastroComponent,
     MainScreenComponent,
     CustomerRegistrationComponent,
+    SearchFilterPipe
   ],
   imports: [
     BrowserModule,

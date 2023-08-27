@@ -8,8 +8,8 @@ public class ResponseBase
     {
         return BigJson(new
         {
-            Sucesso = success,
-            Mensagem = message,
+            Success = success,
+            Message = message,
             Data = objectData,
         });
     }

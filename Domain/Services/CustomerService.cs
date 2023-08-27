@@ -1,9 +1,11 @@
 ﻿using Application.Interfaces;
 using Application.Objects.Requests.Usuario;
 using AutoMapper;
+using Domain.Helper;
 using Domain.Models;
 using Domain.Models.Enums;
 using Domain.Objects.Responses;
+using Domain.Utils;
 using Infra.Data.Interfaces;
 using Microsoft.Extensions.Configuration;
 
@@ -22,7 +24,22 @@ public class CustomerService : ICustomerService
         _configuration = configuration;
     }
 
-    public Task<List<CustomersToGridResponse>> GetCustomersToGrid() => _customerRepository.GetCustomersToGrid();
+    public async Task<List<CustomersToGridResponse>?> GetCustomersToGrid()
+    {
+        var customersToGrid = await _customerRepository.GetCustomersToGrid();
+
+        if (customersToGrid == null)
+            return customersToGrid;
+
+        foreach (var customer in customersToGrid)
+        {
+            if (customer.PaymentMethod == EPaymentMethod.CreditCard && customer.CreditCardDto != null)
+                customer.CreditCardDto.Number = 
+                    FormatCreditCardNumber(StringEncryptionService.DecryptString(_configuration["SecretKey"].GetSafeValue(), customer.CreditCardDto.Number));
+        }
+
+        return customersToGrid;
+    }
 
     public async Task SaveCustomer(AddCustomerRequest saveCustomerRequest)
     {
@@ -87,4 +104,12 @@ public class CustomerService : ICustomerService
     }
 
     public async Task DeleteCustomer(int customerId) => await _customerRepository.DeleteAsync(customerId);
+
+    private static string FormatCreditCardNumber(string creditCardNumber)
+    {
+        if (creditCardNumber.Length != 16)
+            throw new ArgumentException("Número de cartão de crédito deve conter 16 dígitos.");
+
+        return $"{creditCardNumber.Substring(0, 4)} {creditCardNumber.Substring(4, 4)} {creditCardNumber.Substring(8, 4)} {creditCardNumber.Substring(12)}";
+    }
 }

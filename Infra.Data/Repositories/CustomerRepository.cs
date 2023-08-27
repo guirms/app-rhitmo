@@ -29,6 +29,8 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     public async Task<List<CustomersToGridResponse>> GetCustomersToGrid()
     {
         var customer = await _context.Set<Customer>()
+            .Include(c => c.CreditCard)
+            .Include(c => c.BankSlip)
             .AsNoTracking()
             .ToListAsync();
 

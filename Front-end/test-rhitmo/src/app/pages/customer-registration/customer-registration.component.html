@@ -9,7 +9,7 @@
     </section>
 
     <main>
-        <form class="form-body" [formGroup]="registerForm" #formDir="ngForm" (ngSubmit)="registerClient()">
+        <form class="form-body" [formGroup]="registerForm" #formDir="ngForm" (ngSubmit)="submitClient()">
             <div class="form-body__field">
                 <label for="customerName">Nome</label>
                 <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome"
@@ -66,6 +66,7 @@
                             [maxlength]="cepMaxLength" required>
                         <p *ngIf="validateField('cep')" class="form-body__field--error-message">O CEP é
                             obrigatório</p>
+                        <p *ngIf="validateCep()" class="form-body__field--error-message">CEP inválido</p>
                     </div>
                 </div>
 
@@ -187,7 +188,7 @@
                 <label for="bankSlipMessage" *ngIf="!isCreditCard">Seu boleto será enviado por e-mail</label>
                 <br>
 
-                <button class="form-body__submit--button" (click)="teste()">REALIZAR MATRÍCULA</button>
+                <button class="form-body__submit--button" type="submit">REALIZAR MATRÍCULA</button>
                 <p class="form-body__submit--info-message">Informações seguras e criptografadas</p>
             </div>
         </form>

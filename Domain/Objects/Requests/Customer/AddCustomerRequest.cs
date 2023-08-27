@@ -3,7 +3,6 @@ using FluentValidation;
 using System.Text.RegularExpressions;
 
 namespace Application.Objects.Requests.Usuario;
-
 public class AddCustomerRequest
 {
     public required string Name { get; set; }
@@ -16,7 +15,8 @@ public class AddCustomerRequest
     public EPaymentMethod PaymentMethod { get; set; }
     public string? CardHolderName { get; set; }
     public string? CardNumber { get; set; }
-    public DateTime? CardExpirationDate { get; set; }
+    public string? CardExpirationMonth { get; set; }
+    public string? CardExpirationYear { get; set; }
     public string? CardSecurityCode { get; set; }
 
     public class SaveCustomerRequestValidator : AbstractValidator<AddCustomerRequest>
@@ -50,7 +50,7 @@ public class AddCustomerRequest
                 return true;
 
             var cardNumber = request.CardNumber ?? string.Empty;
-            var expirationDate = request.CardExpirationDate?.ToString("MM/yyyy") ?? string.Empty;
+            var expirationDate = request.CardExpirationMonth + '/' + request.CardExpirationYear;
             var cvv = request.CardSecurityCode ?? string.Empty;
 
             if (!Regex.IsMatch(cardNumber, @"^\d{16}$"))

@@ -25,8 +25,15 @@ namespace Infra.Data.Mappings
                 .IsRequired();
 
             builder
-                .Property(c => c.ExpirationDate)
-                .HasColumnType("date")
+                .Property(c => c.ExpirationMonth)
+                .HasMaxLength(2)
+                .HasColumnType("char(2)")
+                .IsRequired();
+
+            builder
+                .Property(c => c.ExpirationYear)
+                .HasMaxLength(4)
+                .HasColumnType("char(4)")
                 .IsRequired();
 
             builder

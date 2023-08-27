@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EPaymentMethod } from 'src/app/objects/enums/EPaymentMethod';
+import { AddCustomerRequest } from 'src/app/objects/requests/AddCustomerRequest ';
 import { BaseService } from 'src/app/services/base/base.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
+import { SharedDataService } from 'src/app/services/shared-data/shared-data.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -22,9 +24,9 @@ export class CustomerRegistrationComponent implements OnInit {
   cep!: string;
   city!: string | null;
   isCreditCard = true;
-  cardHolderName!: string;
-  cardNumber!: string;
-  cardSecurityCode!: string;
+  cardHolderName!: string | null;
+  cardNumber!: string | null;
+  cardSecurityCode!: string | null;
   cardExpirationMonth!: string | null;
   cardExpirationYear!: string | null;
 
@@ -39,7 +41,8 @@ export class CustomerRegistrationComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     public baseService: BaseService,
-    public customerService: CustomerService) {
+    public customerService: CustomerService,
+    private sharedDataService: SharedDataService) {
 
     const stateNames: string[] = environment.brazilLocations.States.map(s => s.Name)
       .sort();
@@ -69,6 +72,8 @@ export class CustomerRegistrationComponent implements OnInit {
     for (let i = 0; i < yearNames.length; i++) {
       this.yearDictionary[i + 1] = yearNames[i];
     }
+
+    this.setFields();
   }
 
   ngOnInit(): void {
@@ -88,7 +93,97 @@ export class CustomerRegistrationComponent implements OnInit {
     });
   }
 
-  registerClient(): void {
+  setFields(): void {
+    const sharedData = this.sharedDataService.getData();
+
+    if (!sharedData) {
+      return;
+    }
+
+    this.name = sharedData.name;
+    this.email = sharedData.email;
+    this.cpf = sharedData.cpf;
+
+    if (sharedData.address && sharedData.cep && sharedData.state && sharedData.city && sharedData.paymentMethod) {
+      this.address = sharedData.address;
+      this.cep = sharedData.cep;
+      this.state = sharedData.state;
+      this.city = sharedData.city;
+      this.isCreditCard = sharedData.paymentMethod === EPaymentMethod.CreditCard;
+
+      if (this.isCreditCard && sharedData.creditCardDto) {
+        this.cardHolderName = sharedData.creditCardDto.name;
+        this.cardNumber = sharedData.creditCardDto.number;
+        this.cardExpirationMonth = sharedData.creditCardDto.expirationMonth;
+        this.cardExpirationYear = sharedData.creditCardDto.expirationYear;
+        this.cardSecurityCode = sharedData.creditCardDto.securityCode;
+      }
+    }
+  }
+
+  submitClient(): void {
+    if (!this.isFormValid()) {
+      this.toastrService.warning('Campos digitados incorretamente');
+      return;
+    }
+
+    const addCustomerRequest: AddCustomerRequest = {
+      name: this.name,
+      email: this.email,
+      cpf: this.removeSpacesAndSpecialChars(this.cpf),
+      address: this.address,
+      state: this.state ?? '',
+      cep: this.removeSpacesAndSpecialChars(this.cep),
+      city: this.city ?? '',
+      paymentMethod: this.isCreditCard ? 1 : 2,
+    }
+
+    if (this.isCreditCard) {
+      addCustomerRequest.cardHolderName = this.cardHolderName,
+      addCustomerRequest.cardNumber = this.removeSpacesAndSpecialChars(this.cardNumber ?? ''),
+      addCustomerRequest.cardExpirationMonth = this.cardExpirationMonth,
+      addCustomerRequest.cardExpirationYear = this.cardExpirationYear,
+      addCustomerRequest.cardSecurityCode = this.cardSecurityCode
+    }
+
+    const isEditing = this.sharedDataService.getData() ? this.sharedDataService.getData().isEditing : false;
+
+    if (isEditing) {
+      this.customerService.updateCustomer(addCustomerRequest)
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            this.toastrService.success(result.message);
+          }
+          else {
+            this.toastrService.info(result.message);
+          }
+        },
+        error: (error) => {
+          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+        },
+      });
+    } 
+    else {
+      this.customerService.saveCustomer(addCustomerRequest)
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            this.toastrService.success(result.message);
+          }
+          else {
+            this.toastrService.info(result.message);
+          }
+        },
+        error: (error) => {
+          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+        },
+      });
+    }
+  }
+
+  removeSpacesAndSpecialChars(input: string): string {
+    return input.replace(/[^a-zA-Z0-9]/g, '');
   }
 
   validateField(fieldName: string): boolean {
@@ -113,6 +208,16 @@ export class CustomerRegistrationComponent implements OnInit {
     return false;
   }
 
+  validateCep(): boolean {
+    const formField = this.registerForm.get('cep');
+
+    if (formField) {
+      return (this.cep?.length !== 12 && formField?.touched) ?? false;
+    }
+
+    return false;
+  }
+
   validateCardNumber(): boolean {
     const formField = this.registerForm.get('cardNumber');
 
@@ -124,10 +229,10 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   validateCardSecurityCode(): boolean {
-    const formField = this.registerForm.get('cardNumber');
+    const formField = this.registerForm.get('cardSecurityCode');
 
     if (formField) {
-      return (this.cardNumber?.length !== 3 && formField?.touched) ?? false;
+      return (this.cardSecurityCode?.length !== 3 && formField?.touched) ?? false;
     }
 
     return false;
@@ -178,7 +283,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
       if (cleanCep.length === 8) {
         this.cepMaxLength = 12;
-      } 
+      }
       else {
         this.cepMaxLength = 8;
       }
@@ -198,7 +303,6 @@ export class CustomerRegistrationComponent implements OnInit {
       }
     }
   }
-
 
   addCharactere(text: string, charactere: string, position: number): string {
     const primeiraParte = text.slice(0, position);
@@ -299,7 +403,7 @@ export class CustomerRegistrationComponent implements OnInit {
     this.isCreditCard = method === EPaymentMethod.CreditCard;
   }
 
-  addCardValidators(): void {
+  private addCardValidators(): void {
     const cardFieldNames = ['cardHolderName', 'cardNumber', 'cardExpirationMonth', 'cardExpirationYear', 'cardSecurityCode'];
 
     cardFieldNames.forEach(c => {
@@ -309,7 +413,7 @@ export class CustomerRegistrationComponent implements OnInit {
     });
   }
 
-  removeCardValidators(): void {
+  private removeCardValidators(): void {
     const cardFieldNames = ['cardHolderName', 'cardNumber', 'cardExpirationMonth', 'cardExpirationYear', 'cardSecurityCode'];
 
     cardFieldNames.forEach(c => {
@@ -319,7 +423,9 @@ export class CustomerRegistrationComponent implements OnInit {
     });
   }
 
-  teste(): void {
-    alert(this.state);
+  private isFormValid(): boolean {
+    return !this.registerForm.invalid && !this.validateCardNumber() && !this.validateCardSecurityCode() && !this.validateCity()
+    && !this.validateCpf() && !this.validateEmail() && !this.validateMonth() && !this.validateState() && !this.validateYear(); 
   }
+
 }

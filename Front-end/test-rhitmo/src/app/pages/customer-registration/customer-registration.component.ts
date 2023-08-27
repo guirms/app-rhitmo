@@ -42,7 +42,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private toastrService: ToastrService,
-    public baseService: BaseService,
+    private baseService: BaseService,
     public customerService: CustomerService,
     private sharedDataService: SharedDataService) {
 
@@ -132,7 +132,6 @@ export class CustomerRegistrationComponent implements OnInit {
 
   validateField(fieldName: string): boolean {
     const formField = this.registerForm.get(fieldName);
-    console.log(formField?.invalid);
     return (formField?.invalid && (formField?.dirty || formField?.touched) && !formField?.errors?.email) ?? false;
   }
 
@@ -241,9 +240,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   formatCpf(): void {
     if (this.cpf) {
-      const cleanCpf = this.cpf.replace(/\D/g, '');
-
-      this.cpf = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
+      this.cpf = this.customerService.formatCpf(this.cpf);
     }
   }
 
@@ -418,6 +415,10 @@ export class CustomerRegistrationComponent implements OnInit {
       });
     }
 
+    this.name = sharedData.name;
+    this.email = sharedData.email;
+    this.cpf = sharedData.cpf;
+    
     if (!sharedData || !sharedData.customerId) {
       const cityNames: string[] = environment.brazilLocations.States
         .flatMap(state => state.Cities)
@@ -432,47 +433,43 @@ export class CustomerRegistrationComponent implements OnInit {
 
       return;
     }
-    
 
     this.customerId = sharedData.customerId
-    this.name = sharedData.name;
-    this.email = sharedData.email;
-    this.cpf = sharedData.cpf;
 
     if (sharedData.address && sharedData.cep && sharedData.state && sharedData.city && sharedData.paymentMethod) {
       if (sharedData.customerId) {
         const filteredState = environment.brazilLocations.States
           .filter(s => s.Name === sharedData.state);
-  
+
         this.statePosition = this.stateList.filter(s => s.value === sharedData.state)[0].key;
-  
+
         const cityNames: string[] = filteredState
           .flatMap(s => s.Cities)
           .sort();
-  
+
         for (let i = 0; i < cityNames.length; i++) {
           this.cityList.push({
             key: i + 1,
             value: cityNames[i]
           });
         }
-  
+
         this.cityPosition = this.cityList.filter(s => s.value === sharedData.city)[0].key;
       }
-  
+
       const monthNames: string[] = environment.months;
-  
+
       for (let i = 0; i < monthNames.length; i++) {
         this.monthList.push({
           key: i + 1,
           value: monthNames[i]
         });
       }
-  
+
       const currentYear = new Date().getFullYear();
       const futureYears = 20;
       const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
-  
+
       for (let i = 0; i < yearNames.length; i++) {
         this.yearList.push({
           key: i + 1,

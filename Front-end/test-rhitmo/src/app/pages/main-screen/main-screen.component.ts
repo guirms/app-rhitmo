@@ -81,6 +81,12 @@ export class MainScreenComponent implements OnInit {
       });
   }
 
+  formatCpf(): void {
+    if (this.customerCpf) {
+      this.customerCpf = this.customerService.formatCpf(this.customerCpf);
+    }
+  }
+
   private loadGrid(): void {
     this.customerService.loadGrid()
       .subscribe({

@@ -17,19 +17,25 @@ export class CustomerService {
     return this.http.get<DefaultResponse>(environment.apiUrl + 'Customer/GetCustomersToGrid');
   }
 
-  saveCustomer(saveCustomerRequest: AddCustomerRequest):Observable<NoContentResponse> {
+  saveCustomer(saveCustomerRequest: AddCustomerRequest): Observable<NoContentResponse> {
     return this.http.post<NoContentResponse>(environment.apiUrl + 'Customer/SaveCustomer', saveCustomerRequest);
   }
 
-  updateCustomer(updateCustomerRequest: AddCustomerRequest, customerId: number):Observable<NoContentResponse> {
+  updateCustomer(updateCustomerRequest: AddCustomerRequest, customerId: number): Observable<NoContentResponse> {
     const params = new HttpParams().set('customerId', customerId);
 
     return this.http.put<NoContentResponse>(environment.apiUrl + 'Customer/UpdateCustomer', updateCustomerRequest, { params });
   }
 
-  deleteCustomer(customerId: number):Observable<NoContentResponse>  {
+  deleteCustomer(customerId: number): Observable<NoContentResponse> {
     const params = new HttpParams().set('customerId', customerId);
 
     return this.http.delete<NoContentResponse>(environment.apiUrl + 'Customer/DeleteCustomer', { params });
   }
+
+  formatCpf(cpf: string): string {
+    const cleanCpf = cpf.replace(/\D/g, '');
+    return cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
+  }
+
 }

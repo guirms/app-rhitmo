@@ -61,8 +61,9 @@
                 <div class="form-body__location--container">
                     <div class="form-body__field">
                         <label for="customerCep">CEP</label>
-                        <input type="text" [(ngModel)]="cep" (ngModelChange)="formatCep()" class="form-body__field--input"
-                            placeholder="00.000 - 000" formControlName="cep" [maxlength]="cepMaxLength" required>
+                        <input type="text" [(ngModel)]="cep" (ngModelChange)="formatCep()"
+                            class="form-body__field--input" placeholder="00.000 - 000" formControlName="cep"
+                            [maxlength]="cepMaxLength" required>
                         <p *ngIf="validateField('cep')" class="form-body__field--error-message">O CEP é
                             obrigatório</p>
                     </div>
@@ -82,6 +83,10 @@
                     </div>
                 </div>
             </section>
+
+            <div class="form-body__payment-container">
+                <p class="form-body__payment-container--text">Forma de pagamento</p>
+            </div>
 
             <button (click)="teste()">teste</button>
         </form>

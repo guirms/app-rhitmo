@@ -52,4 +52,5 @@ export class TelaCadastroComponent {
     this.exibeSenha = !this.exibeSenha;
   }
 
+
 }

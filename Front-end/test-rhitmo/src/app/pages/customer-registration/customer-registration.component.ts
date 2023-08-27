@@ -39,7 +39,7 @@ export class CustomerRegistrationComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       cpf: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      state: ['', [Validators.required]],
+      state: [0, [Validators.required]],
       zipCode: ['', [Validators.required]],
       city: ['', [Validators.required]],
       cardholderName: ['', []],
@@ -74,6 +74,12 @@ export class CustomerRegistrationComponent implements OnInit {
     }
 
     return false;
+  }
+
+  validateState(): boolean {
+    const formField = this.cadastroForm.get('state');
+
+    return (!this.state && formField?.touched) ?? false;
   }
 
   formatCpf(): void {

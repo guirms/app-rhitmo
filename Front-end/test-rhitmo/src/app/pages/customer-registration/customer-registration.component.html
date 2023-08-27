@@ -12,26 +12,47 @@
         <form class="form-body" [formGroup]="cadastroForm" #formDir="ngForm" (ngSubmit)="registerClient()">
             <div class="form-body__field">
                 <label for="customerName">Nome</label>
-                <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome" formControlName="name" required>
+                <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome"
+                    formControlName="name" required>
                 <p *ngIf="validateField('name')" class="form-body__field--error-message">O nome é obrigatório</p>
             </div>
 
             <div class="form-body__field">
                 <label for="customerEmail">Email</label>
-                <input type="text" [(ngModel)]="email" class="form-body__field--input" placeholder="Digite seu melhor e-mail" formControlName="email" required>
+                <input type="text" [(ngModel)]="email" class="form-body__field--input"
+                    placeholder="Digite seu melhor e-mail" formControlName="email" required>
                 <p *ngIf="validateField('email')" class="form-body__field--error-message">O e-mail é obrigatório</p>
                 <p *ngIf="validateEmail()" class="form-body__field--error-message">E-mail inválido</p>
             </div>
 
             <div class="form-body__field">
                 <label for="customerCpf">Cpf</label>
-                <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input" placeholder="Digite CPF aqui" formControlName="cpf" required>
+                <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input"
+                    placeholder="Digite CPF aqui" formControlName="cpf" required>
                 <p *ngIf="validateField('cpf')" class="form-body__field--error-message">O CPF é obrigatório</p>
                 <p *ngIf="validateCpf()" class="form-body__field--error-message">CPF inválido</p>
             </div>
 
             <section class="form-body__location">
-                a
+                <div class="form-body__location--container">
+                    <div class="form-body__field">
+                        <label for="customerAddress">Endereço</label>
+                        <input type="text" [(ngModel)]="address" class="form-body__field--input"
+                            placeholder="Digite endereço" formControlName="address" required>
+                        <p *ngIf="validateField('address')" class="form-body__field--error-message">O endereço é obrigatório</p>
+                    </div>
+                </div>
+
+                <div class="form-body__location--container">
+                    <div class="form-body__field">
+                        <label for="customerCpf">Cpf</label>
+                        <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input"
+                            placeholder="Digite CPF aqui" formControlName="cpf" required>
+                        <p *ngIf="validateField('cpf')" class="form-body__field--error-message">O CPF é obrigatório</p>
+                        <p *ngIf="validateCpf()" class="form-body__field--error-message">CPF inválido</p>
+                    </div>
+                </div>
+
             </section>
 
             <button (click)="validateField('name')">teste</button>

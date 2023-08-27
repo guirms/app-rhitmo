@@ -15,6 +15,7 @@ export class CustomerRegistrationComponent implements OnInit {
   name!: string;
   email!: string;
   cpf!: string;
+  address!: string;
 
   constructor(private formBuilder: FormBuilder,
     private toastrService: ToastrService,

@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '', 
     pathMatch: 'full',
-    component: CustomerRegistrationComponent
+    component: MainScreenComponent
   },
   {
     path: 'teste', 

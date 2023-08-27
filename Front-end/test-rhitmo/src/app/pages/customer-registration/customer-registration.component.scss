@@ -101,7 +101,19 @@ main {
     }
 
     &__location {
-        background-color: red;
+        display: flex;
+
+        &--container {
+            flex: 0 0 50%;
+
+            &:nth-child(odd) {
+                padding-right: 12px;
+            }
+            
+            &:nth-child(even) {
+                padding-left: 12px;
+            }
+        }
     }
 }
 

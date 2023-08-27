@@ -30,8 +30,12 @@ export class CustomerRegistrationComponent implements OnInit {
   cardSecurityCode!: string | null;
   cardExpirationMonth!: string | null;
   cardExpirationYear!: string | null;
-
   cityList: KeyAndValue[] = [];
+  customerId!: number;
+
+  statePosition = 0;
+  cityPosition = 0;
+
   readonly stateList: KeyAndValue[] = [];
   readonly monthList: KeyAndValue[] = [];
   readonly yearList: KeyAndValue[] = [];
@@ -42,93 +46,23 @@ export class CustomerRegistrationComponent implements OnInit {
     public customerService: CustomerService,
     private sharedDataService: SharedDataService) {
 
-    const stateNames: string[] = environment.brazilLocations.States.map(s => s.Name)
-      .sort();
-
-    for (let i = 0; i < stateNames.length; i++) {
-      this.stateList.push({
-        key: i + 1,
-        value: stateNames[i]
-      });
-    }
-
-    const cityNames: string[] = environment.brazilLocations.States
-      .flatMap(state => state.Cities)
-      .sort();
-
-    for (let i = 0; i < cityNames.length; i++) {
-      this.cityList.push({
-        key: i + 1,
-        value: cityNames[i]
-      });
-    }
-
-    const monthNames: string[] = environment.months;
-
-    for (let i = 0; i < monthNames.length; i++) {
-      this.monthList.push({
-        key: i + 1,
-        value: monthNames[i]
-      });
-    }
-
-    const currentYear = new Date().getFullYear();
-    const futureYears = 20;
-    const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
-
-    for (let i = 0; i < yearNames.length; i++) {
-      this.yearList.push({
-        key: i + 1,
-        value: yearNames[i]
-      });
-    }
-
     this.setFields();
   }
-
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       cpf: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      state: [0, [Validators.required]],
+      state: [this.statePosition, [Validators.required]],
       cep: ['', [Validators.required]],
-      city: [0, [Validators.required]],
+      city: [this.cityPosition, [Validators.required]],
       cardHolderName: ['', [Validators.required]],
       cardExpirationMonth: [0, [Validators.required]],
       cardExpirationYear: [0, [Validators.required]],
       cardNumber: ['', [Validators.required]],
       cardSecurityCode: ['', [Validators.required]]
     });
-  }
-
-  setFields(): void {
-    const sharedData = this.sharedDataService.getData();
-
-    if (!sharedData) {
-      return;
-    }
-
-    this.name = sharedData.name;
-    this.email = sharedData.email;
-    this.cpf = sharedData.cpf;
-
-    if (sharedData.address && sharedData.cep && sharedData.state && sharedData.city && sharedData.paymentMethod) {
-      this.address = sharedData.address;
-      this.cep = sharedData.cep;
-      this.state = sharedData.state;
-      this.city = sharedData.city;
-      this.isCreditCard = sharedData.paymentMethod === EPaymentMethod.CreditCard;
-
-      if (this.isCreditCard && sharedData.creditCardDto) {
-        this.cardHolderName = sharedData.creditCardDto.name;
-        this.cardNumber = sharedData.creditCardDto.number;
-        this.cardExpirationMonth = sharedData.creditCardDto.expirationMonth;
-        this.cardExpirationYear = sharedData.creditCardDto.expirationYear;
-        this.cardSecurityCode = sharedData.creditCardDto.securityCode;
-      }
-    }
   }
 
   submitClient(): void {
@@ -142,9 +76,9 @@ export class CustomerRegistrationComponent implements OnInit {
       email: this.email,
       cpf: this.removeSpacesAndSpecialChars(this.cpf),
       address: this.address,
-      state: this.state ?? '',
+      state: this.stateList.filter(s => s.key === Number(this.state))[0].value ?? '',
       cep: this.removeSpacesAndSpecialChars(this.cep),
-      city: this.city ?? '',
+      city: this.cityList.filter(c => c.key === Number(this.city))[0].value ?? '',
       paymentMethod: this.isCreditCard ? 1 : 2,
     }
 
@@ -156,10 +90,8 @@ export class CustomerRegistrationComponent implements OnInit {
         addCustomerRequest.cardSecurityCode = this.cardSecurityCode
     }
 
-    const isEditing = this.sharedDataService.getData() ? this.sharedDataService.getData().isEditing : false;
-
-    if (isEditing) {
-      this.customerService.updateCustomer(addCustomerRequest)
+    if (this.customerId) {
+      this.customerService.updateCustomer(addCustomerRequest, this.customerId)
         .subscribe({
           next: (result) => {
             if (result.success) {
@@ -200,7 +132,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   validateField(fieldName: string): boolean {
     const formField = this.registerForm.get(fieldName);
-
+    console.log(formField?.invalid);
     return (formField?.invalid && (formField?.dirty || formField?.touched) && !formField?.errors?.email) ?? false;
   }
 
@@ -303,7 +235,7 @@ export class CustomerRegistrationComponent implements OnInit {
     if (!this.cardExpirationYear && isSubmitted) {
       return true;
     }
-    
+
     return (!this.cardExpirationYear && formField?.touched) ?? false;
   }
 
@@ -351,14 +283,13 @@ export class CustomerRegistrationComponent implements OnInit {
     }
     else {
       this.state = target.value;
-      this.cityList = [];
 
       const filteredState = environment.brazilLocations.States
-        .filter(s => s.Name === this.stateList[Number(this.state)].value);
+        .filter(s => s.Name === this.stateList[Number(this.state) - 1].value);
 
       if (this.city) {
         const cityExists = filteredState
-          .some(c => c.Cities.some(c => c === this.cityList[Number(this.city)].value));
+          .some(c => c.Cities.some(c => c === this.cityList[Number(this.city) - 1].value));
 
         if (!cityExists) {
           this.city = null;
@@ -461,13 +392,108 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   private isFormValid(): boolean {
+    if (!this.customerId && !this.registerForm.invalid) {
+      return false;
+    }
+
     if (this.isCreditCard) {
-      return !this.registerForm.invalid && !this.validateCardNumber(true) && !this.validateCardSecurityCode(true) && !this.validateCity(true)
+      return !this.validateCardNumber(true) && !this.validateCardSecurityCode(true) && !this.validateCity(true)
         && !this.validateCpf(true) && !this.validateEmail() && !this.validateMonth(true) && !this.validateState(true) && !this.validateYear(true);
     }
+
+    return !this.validateCity(true)
+      && !this.validateCpf(true) && !this.validateEmail() && !this.validateState(true);
+  }
+
+  private setFields(): void {
+    const sharedData = this.sharedDataService.getData();
+
+    const stateNames: string[] = environment.brazilLocations.States.map(s => s.Name)
+      .sort();
+
+    for (let i = 0; i < stateNames.length; i++) {
+      this.stateList.push({
+        key: i + 1,
+        value: stateNames[i]
+      });
+    }
+
+    if (!sharedData || !sharedData.customerId) {
+      const cityNames: string[] = environment.brazilLocations.States
+        .flatMap(state => state.Cities)
+        .sort();
+
+      for (let i = 0; i < cityNames.length; i++) {
+        this.cityList.push({
+          key: i + 1,
+          value: cityNames[i]
+        });
+      }
+
+      return;
+    }
     
-    return !this.registerForm.invalid && !this.validateCity(true)
-    && !this.validateCpf(true) && !this.validateEmail() && !this.validateState(true);
+
+    this.customerId = sharedData.customerId
+    this.name = sharedData.name;
+    this.email = sharedData.email;
+    this.cpf = sharedData.cpf;
+
+    if (sharedData.address && sharedData.cep && sharedData.state && sharedData.city && sharedData.paymentMethod) {
+      if (sharedData.customerId) {
+        const filteredState = environment.brazilLocations.States
+          .filter(s => s.Name === sharedData.state);
+  
+        this.statePosition = this.stateList.filter(s => s.value === sharedData.state)[0].key;
+  
+        const cityNames: string[] = filteredState
+          .flatMap(s => s.Cities)
+          .sort();
+  
+        for (let i = 0; i < cityNames.length; i++) {
+          this.cityList.push({
+            key: i + 1,
+            value: cityNames[i]
+          });
+        }
+  
+        this.cityPosition = this.cityList.filter(s => s.value === sharedData.city)[0].key;
+      }
+  
+      const monthNames: string[] = environment.months;
+  
+      for (let i = 0; i < monthNames.length; i++) {
+        this.monthList.push({
+          key: i + 1,
+          value: monthNames[i]
+        });
+      }
+  
+      const currentYear = new Date().getFullYear();
+      const futureYears = 20;
+      const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
+  
+      for (let i = 0; i < yearNames.length; i++) {
+        this.yearList.push({
+          key: i + 1,
+          value: yearNames[i]
+        });
+      }
+
+      this.address = sharedData.address;
+      this.cep = sharedData.cep;
+      this.state = this.stateList.filter(s => s.value === sharedData.state)[0].key.toString();
+      this.city = this.cityList.filter(c => c.value === sharedData.city)[0].key.toString();
+      this.isCreditCard = sharedData.paymentMethod === EPaymentMethod.CreditCard;
+
+      if (this.isCreditCard && sharedData.creditCardDto) {
+        this.cardHolderName = sharedData.creditCardDto.name;
+        this.cardNumber = sharedData.creditCardDto.number;
+        this.cardExpirationMonth = sharedData.creditCardDto.expirationMonth;
+        this.cardExpirationYear = sharedData.creditCardDto.expirationYear;
+        this.cardSecurityCode = sharedData.creditCardDto.securityCode;
+      }
+    }
   }
 
 }

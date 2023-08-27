@@ -137,31 +137,27 @@ main {
                     -webkit-appearance: none;
                 }
             }
-
-            td:last-child {
-                width: 25vh;
-            }
         }
 
         &--btn-edit {
             cursor: pointer;
             position: absolute;
             margin-left: 26px;
-            margin-top: 17px;
+            margin-top: .5%;
         }
 
         &--btn-remove {
             cursor: pointer;
             position: absolute;
             margin-left: 68px;
-            margin-top: 17px;
+            margin-top: .5%;
         }
 
         &--btn-add {
             cursor: pointer;
             position: absolute;
             margin-left: 26px;
-            margin-top: 5px;
+            margin-top: .5%;
         }
     }
 }

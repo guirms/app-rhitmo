@@ -35,7 +35,6 @@ export class MainScreenComponent implements OnInit {
 
     if (!customer && (this.customerName || this.customerEmail || this.customerCpf)) {
       dataToShare = {
-        isEditing: false,
         name: this.customerName,
         email: this.customerEmail,
         cpf: this.customerCpf
@@ -45,7 +44,7 @@ export class MainScreenComponent implements OnInit {
     }
     else if (customer) {
       dataToShare = {
-        isEditing: true,
+        customerId: customer.customerId,
         name: customer.name,
         email: customer.email,
         cpf: customer.cpf,

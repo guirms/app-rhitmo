@@ -17,7 +17,7 @@ interface Locations {
 }
 
 export interface CustomerSharedData {
-    isEditing: boolean,
+    customerId?: number | null,
     name: string;
     email: string;
     cpf: string;

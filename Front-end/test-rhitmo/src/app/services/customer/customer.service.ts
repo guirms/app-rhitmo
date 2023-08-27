@@ -21,8 +21,10 @@ export class CustomerService {
     return this.http.post<NoContentResponse>(environment.apiUrl + 'Customer/SaveCustomer', saveCustomerRequest);
   }
 
-  updateCustomer(updateCustomerRequest: AddCustomerRequest):Observable<NoContentResponse> {
-    return this.http.post<NoContentResponse>(environment.apiUrl + 'Customer/UpdateCustomer', updateCustomerRequest);
+  updateCustomer(updateCustomerRequest: AddCustomerRequest, customerId: number):Observable<NoContentResponse> {
+    const params = new HttpParams().set('customerId', customerId);
+
+    return this.http.put<NoContentResponse>(environment.apiUrl + 'Customer/UpdateCustomer', updateCustomerRequest, { params });
   }
 
   deleteCustomer(customerId: number):Observable<NoContentResponse>  {

@@ -17,8 +17,11 @@ export class CustomerRegistrationComponent implements OnInit {
   name!: string;
   email!: string;
   cpf!: string;
+  cpfMaxLength = 11;
+  cepMaxLength = 8;
   address!: string;
   state!: string | null;
+  cep!: string;
 
   readonly stateDictionary: { [key: number]: string } = {};
 
@@ -40,7 +43,7 @@ export class CustomerRegistrationComponent implements OnInit {
       cpf: ['', [Validators.required]],
       address: ['', [Validators.required]],
       state: [0, [Validators.required]],
-      zipCode: ['', [Validators.required]],
+      cep: ['', [Validators.required]],
       city: ['', [Validators.required]],
       cardholderName: ['', []],
       cardNumber: ['', []],
@@ -48,7 +51,6 @@ export class CustomerRegistrationComponent implements OnInit {
       cardSecurityCode: ['', []]
     });
   }
-
 
   registerClient(): void {
 
@@ -82,12 +84,38 @@ export class CustomerRegistrationComponent implements OnInit {
     return (!this.state && formField?.touched) ?? false;
   }
 
-  formatCpf(): void {
-    const cleanCpf = this.cpf.replace(/\D/g, '');
-
-    this.cpf = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
+  validateCep(): boolean {
+    return false;
   }
 
+  formatCpf(): void {
+    if (this.cpf) {
+      const cleanCpf = this.cpf.replace(/\D/g, '');
+
+      if (cleanCpf.length === 11) {
+        this.cpfMaxLength = 14;
+      }
+      else {
+        this.cpfMaxLength = 11;
+      }
+
+      this.cpf = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
+    }
+  }
+
+  formatCep(): void {
+    if (this.cep) {
+      const cleanCep = this.cep.replace(/\D/g, '');
+
+      if (cleanCep.length === 8) {
+        this.cepMaxLength = 12;
+      } else {
+        this.cepMaxLength = 8;
+      }
+
+      this.cep = cleanCep.replace(/(\d{2})(\d{3})(\d{3})/g, '$1.$2 - $3');
+    }
+  }
   addCharactere(text: string, charactere: string, position: number): string {
     const primeiraParte = text.slice(0, position);
     const segundaParte = text.slice(position);

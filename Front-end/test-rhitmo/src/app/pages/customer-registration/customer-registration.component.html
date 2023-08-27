@@ -27,8 +27,8 @@
 
             <div class="form-body__field">
                 <label for="customerCpf">Cpf</label>
-                <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input"
-                    placeholder="Digite CPF aqui" formControlName="cpf" required>
+                <input type="text" [(ngModel)]="cpf" (ngModelChange)="formatCpf()" class="form-body__field--input"
+                    placeholder="Digite CPF aqui" formControlName="cpf" [maxlength]="cpfMaxLength" required>
                 <p *ngIf="validateField('cpf')" class="form-body__field--error-message">O CPF é obrigatório</p>
                 <p *ngIf="validateCpf()" class="form-body__field--error-message">CPF inválido</p>
             </div>
@@ -50,13 +50,38 @@
                         <select (change)="setState($event)" class="form-body__field--select"
                             [ngStyle]="{color: state ? '#000000' : '#A9A9A9'}" formControlName="state" required>
                             <option [value]="0">Selecione o Estado</option>
-                            <option *ngFor="let state of stateDictionary | keyvalue" [value]="state.key">{{ state.value }}</option>
+                            <option *ngFor="let state of stateDictionary | keyvalue" [value]="state.key">{{ state.value
+                                }}</option>
+                        </select>
+                        <p *ngIf="validateState()" class="form-body__field--error-message">O estado é
+                            obrigatório</p>
+                        <p *ngIf="validateCep()" class="form-body__field--error-message">Cep inválido</p>
+                    </div>
+                </div>
+
+                <div class="form-body__location--container">
+                    <div class="form-body__field">
+                        <label for="customerCep">CEP</label>
+                        <input type="text" [(ngModel)]="cep" (ngModelChange)="formatCep()" class="form-body__field--input"
+                            placeholder="00.000 - 000" formControlName="cep" [maxlength]="cepMaxLength" required>
+                        <p *ngIf="validateField('cep')" class="form-body__field--error-message">O CEP é
+                            obrigatório</p>
+                    </div>
+                </div>
+
+                <div class="form-body__location--container">
+                    <div class="form-body__field">
+                        <label for="customerState">Estado</label>
+                        <select (change)="setState($event)" class="form-body__field--select"
+                            [ngStyle]="{color: state ? '#000000' : '#A9A9A9'}" formControlName="state" required>
+                            <option [value]="0">Selecione o Estado</option>
+                            <option *ngFor="let state of stateDictionary | keyvalue" [value]="state.key">{{ state.value
+                                }}</option>
                         </select>
                         <p *ngIf="validateState()" class="form-body__field--error-message">O estado é
                             obrigatório</p>
                     </div>
                 </div>
-
             </section>
 
             <button (click)="teste()">teste</button>

@@ -39,23 +39,25 @@
                         <label for="customerAddress">Endereço</label>
                         <input type="text" [(ngModel)]="address" class="form-body__field--input"
                             placeholder="Digite endereço" formControlName="address" required>
-                        <p *ngIf="validateField('address')" class="form-body__field--error-message">O endereço é obrigatório</p>
+                        <p *ngIf="validateField('address')" class="form-body__field--error-message">O endereço é
+                            obrigatório</p>
                     </div>
                 </div>
 
                 <div class="form-body__location--container">
                     <div class="form-body__field">
                         <label for="customerCpf">Cpf</label>
-                        <input type="text" [(ngModel)]="cpf" (blur)="formatCpf()" class="form-body__field--input"
-                            placeholder="Digite CPF aqui" formControlName="cpf" required>
-                        <p *ngIf="validateField('cpf')" class="form-body__field--error-message">O CPF é obrigatório</p>
-                        <p *ngIf="validateCpf()" class="form-body__field--error-message">CPF inválido</p>
+                        <select (change)="setState($event)" class="form-body__field--select"
+                            [ngStyle]="{color: state ? '#000000' : '#A9A9A9'}">
+                            <option [value]="0">Selecione o Estado</option>
+                            <option *ngFor="let state of stateDictionary | keyvalue" [value]="state.key">{{ state.value }}</option>
+                        </select>
                     </div>
                 </div>
 
             </section>
 
-            <button (click)="validateField('name')">teste</button>
+            <button (click)="teste()">teste</button>
         </form>
     </main>
 

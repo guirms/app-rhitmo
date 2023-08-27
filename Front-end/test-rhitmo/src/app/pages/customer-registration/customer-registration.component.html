@@ -113,8 +113,8 @@
                     </div>
                 </div>
 
-                <section *ngIf="isCreditCard" class="form-body__name-date">
-                    <div class="form-body__name-date__name">
+                <section *ngIf="isCreditCard" class="form-body__credit-card-container">
+                    <div class="form-body__credit-card-container__name">
                         <div class="form-body__field">
                             <label for="customerCardHolderName">Nome do cartão</label>
                             <input type="text" [(ngModel)]="cardHolderName" class="form-body__field--input"
@@ -125,8 +125,8 @@
                         </div>
                     </div>
 
-                    <div class="form-body__name-date__date">
-                        <div class="form-body__name-date__date__field">
+                    <div class="form-body__credit-card-container__date">
+                        <div class="form-body__credit-card-container__date__field">
                             <label for="customerCardExpirationMonth">Data de Expiração</label>
                             <select (change)="setCardExpirationMonth($event)" class="form-body__field--select"
                                 [ngStyle]="{color: cardExpirationMonth ? '#000000' : '#A9A9A9'}"
@@ -139,7 +139,7 @@
                             <p *ngIf="validateMonth()" class="form-body__field--error-message">O mês é obrigatório</p>
                         </div>
 
-                        <div class="form-body__name-date__date__field">
+                        <div class="form-body__credit-card-container__date__field">
                             <label for="customerCardExpirationYear"></label>
                             <select (change)="setCardExpirationYear($event)" class="form-body__field--select"
                                 [ngStyle]="{color: cardExpirationYear ? '#000000' : '#A9A9A9'}"
@@ -151,10 +151,44 @@
                             <p *ngIf="validateYear()" class="form-body__field--error-message">O ano é obrigatório</p>
                         </div>
                     </div>
+
+                    <section class="form-body__card-info">
+                        <div class="form-body__location--container">
+                            <div class="form-body__field">
+                                <label for="customerCardNumber">Número do cartão</label>
+                                <input type="text" [(ngModel)]="cardNumber" (ngModelChange)="formatCardNumber()"
+                                    class="form-body__field--input" placeholder="0000 0000 0000 0000"
+                                    formControlName="cardNumber" maxlength=19 required>
+                                <p *ngIf="validateField('cardNumber')" class="form-body__field--error-message">O número
+                                    do cartão é obrigatório</p>
+                                <p *ngIf="validateCardNumber()" class="form-body__field--error-message">Número do cartão
+                                    inválido</p>
+                            </div>
+                        </div>
+
+                        <div class="form-body__location--container">
+                            <div class="form-body__field">
+                                <label for="customerCardSecurityCode">Código de Segurança</label>
+                                <input type="text" [(ngModel)]="cardSecurityCode" class="form-body__field--input"
+                                    placeholder="XXX" formControlName="cardSecurityCode" maxlength=3 required>
+                                <p *ngIf="validateField('cardSecurityCode')" class="form-body__field--error-message">O
+                                    código de segurança do cartão é obrigatório</p>
+                                <p *ngIf="validateCardSecurityCode()" class="form-body__field--error-message">Código de
+                                    segurança cartão inválido</p>
+                            </div>
+                        </div>
+                    </section>
                 </section>
             </div>
 
-            <button (click)="teste()">teste</button>
+            <div class="form-body__submit">
+                <label for="cardMessage" *ngIf="isCreditCard">Seu cartão será debitado em R$ 49,00</label>
+                <label for="bankSlipMessage" *ngIf="!isCreditCard">Seu boleto será enviado por e-mail</label>
+                <br>
+
+                <button class="form-body__submit--button" (click)="teste()">REALIZAR MATRÍCULA</button>
+                <p class="form-body__submit--info-message">Informações seguras e criptografadas</p>
+            </div>
         </form>
     </main>
 

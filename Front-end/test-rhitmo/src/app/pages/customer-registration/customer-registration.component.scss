@@ -4,6 +4,7 @@ $title-page-background-color: #D9D9D9;
 $main-text-color: #000000;
 $main-form-color: #377DC0;
 $error-message-color: #ff0000;
+$border-color: #EEF3F7;
 
 $main-font: 'Koh Santepheap', serif;
 $header-title-font: 'Inter', sans-serif;
@@ -138,38 +139,10 @@ main {
         }
     }
 
-    &__name-date {
-        display: flex;
-
-        &__name {
-            flex: 0 0 50%;
-            padding-right: 12px;
-        }
-
-        &__date {
-            padding-left: 12px;
-            display: flex;
-            flex: 0 0 50%;
-
-            &__field {
-                flex: 0 0 50%;
-
-                &:nth-child(odd) {
-                    padding-right: 12px;
-                }
-    
-                &:nth-child(even) {
-                    padding-left: 12px;
-                }
-            }
-        }
-    }
-
     &__payment-container {
-
         &__title {
             margin-top: 14px;
-            border-bottom: 3px solid #EEF3F7;
+            border-bottom: 3px solid $border-color;
             margin-bottom: 30px;
 
             &--text {
@@ -202,6 +175,64 @@ main {
             }
         }
     }
+
+    &__credit-card-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 5px;
+        border-bottom: 3px solid $border-color;
+        margin-bottom: 50px;
+
+        &__name {
+            flex: 0 0 50%;
+            padding-right: 12px;
+        }
+
+        &__date {
+            padding-left: 12px;
+            display: flex;
+            flex: 0 0 50%;
+
+            &__field {
+                flex: 0 0 50%;
+
+                &:nth-child(odd) {
+                    padding-right: 12px;
+                }
+
+                &:nth-child(even) {
+                    padding-left: 12px;
+                }
+            }
+        }
+    }
+
+    &__card-info {
+        display: flex;
+        flex: 1;
+    }
+
+    &__submit {
+        display: inline-block;
+
+        &--button {
+            margin-top: 16px;
+            color: #FFF;
+            background-color: $main-form-color;
+            width: 73.58%;
+            height: 58px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            border: none;
+        }
+
+        &--info-message {
+            margin-top: 19px;
+            font-size: 14px;
+            margin-bottom: 63px;
+        }
+    }
 }
 
 .footer {
@@ -217,4 +248,5 @@ main {
         margin-left: 32px;
         margin-top: 10px;
     }
+
 }

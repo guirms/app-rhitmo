@@ -24,6 +24,7 @@ export class CustomerRegistrationComponent implements OnInit {
   isCreditCard = true;
   cardHolderName!: string;
   cardNumber!: string;
+  cardSecurityCode!: string;
   cardExpirationMonth!: string | null;
   cardExpirationYear!: string | null;
 
@@ -62,7 +63,7 @@ export class CustomerRegistrationComponent implements OnInit {
     }
 
     const currentYear = new Date().getFullYear();
-    const futureYears = 20; 
+    const futureYears = 20;
     const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
 
     for (let i = 0; i < yearNames.length; i++) {
@@ -80,9 +81,9 @@ export class CustomerRegistrationComponent implements OnInit {
       cep: ['', [Validators.required]],
       city: [0, [Validators.required]],
       cardHolderName: ['', [Validators.required]],
-      cardNumber: ['', [Validators.required]],
       cardExpirationMonth: [0, [Validators.required]],
       cardExpirationYear: [0, [Validators.required]],
+      cardNumber: ['', [Validators.required]],
       cardSecurityCode: ['', [Validators.required]]
     });
   }
@@ -107,6 +108,26 @@ export class CustomerRegistrationComponent implements OnInit {
 
     if (formField) {
       return (this.cpf?.length !== 14 && formField?.touched) ?? false;
+    }
+
+    return false;
+  }
+
+  validateCardNumber(): boolean {
+    const formField = this.registerForm.get('cardNumber');
+
+    if (formField) {
+      return (this.cardNumber?.length !== 19 && formField?.touched) ?? false;
+    }
+
+    return false;
+  }
+
+  validateCardSecurityCode(): boolean {
+    const formField = this.registerForm.get('cardNumber');
+
+    if (formField) {
+      return (this.cardNumber?.length !== 3 && formField?.touched) ?? false;
     }
 
     return false;
@@ -157,7 +178,8 @@ export class CustomerRegistrationComponent implements OnInit {
 
       if (cleanCep.length === 8) {
         this.cepMaxLength = 12;
-      } else {
+      } 
+      else {
         this.cepMaxLength = 8;
       }
 
@@ -165,7 +187,7 @@ export class CustomerRegistrationComponent implements OnInit {
     }
   }
 
-  formatCardNumbebr(): void {
+  formatCardNumber(): void {
     if (this.cardNumber) {
       const cleanCardNumber = this.cardNumber.replace(/\D/g, '');
 
@@ -176,6 +198,7 @@ export class CustomerRegistrationComponent implements OnInit {
       }
     }
   }
+
 
   addCharactere(text: string, charactere: string, position: number): string {
     const primeiraParte = text.slice(0, position);

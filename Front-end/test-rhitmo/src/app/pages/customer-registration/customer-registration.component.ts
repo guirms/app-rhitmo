@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { KeyAndValue } from 'src/app/objects/interfaces/generics';
+import { EPaymentMethod } from 'src/app/objects/enums/EPaymentMethod';
 import { BaseService } from 'src/app/services/base/base.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { environment } from 'src/environments/environment';
@@ -17,16 +17,23 @@ export class CustomerRegistrationComponent implements OnInit {
   name!: string;
   email!: string;
   cpf!: string;
-  cpfMaxLength = 11;
-  cepMaxLength = 8;
   address!: string;
   state!: string | null;
   cep!: string;
   city!: string | null;
-  cityDictionary: { [key: number]: string } = {};
-  cityPlaceholder = "Selecione o estado antes";
+  isCreditCard = true;
+  cardHolderName!: string;
+  cardNumber!: string;
+  cardExpirationMonth!: string | null;
+  cardExpirationYear!: string | null;
 
+  cpfMaxLength = 11;
+  cepMaxLength = 8;
+
+  cityDictionary: { [key: number]: string } = {};
   readonly stateDictionary: { [key: number]: string } = {};
+  readonly monthDictionary: { [key: number]: string } = {};
+  readonly yearDictionary: { [key: number]: string } = {};
 
   constructor(private formBuilder: FormBuilder,
     private toastrService: ToastrService,
@@ -47,6 +54,20 @@ export class CustomerRegistrationComponent implements OnInit {
     for (let i = 0; i < cityNames.length; i++) {
       this.cityDictionary[i + 1] = cityNames[i];
     }
+
+    const monthNames: string[] = environment.months.sort();
+
+    for (let i = 0; i < monthNames.length; i++) {
+      this.monthDictionary[i + 1] = monthNames[i];
+    }
+
+    const currentYear = new Date().getFullYear();
+    const futureYears = 20; 
+    const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
+
+    for (let i = 0; i < yearNames.length; i++) {
+      this.yearDictionary[i + 1] = yearNames[i];
+    }
   }
 
   ngOnInit(): void {
@@ -58,10 +79,11 @@ export class CustomerRegistrationComponent implements OnInit {
       state: [0, [Validators.required]],
       cep: ['', [Validators.required]],
       city: [0, [Validators.required]],
-      cardholderName: ['', []],
-      cardNumber: ['', []],
-      cardExpirationDate: ['', []],
-      cardSecurityCode: ['', []]
+      cardHolderName: ['', [Validators.required]],
+      cardNumber: ['', [Validators.required]],
+      cardExpirationMonth: [0, [Validators.required]],
+      cardExpirationYear: [0, [Validators.required]],
+      cardSecurityCode: ['', [Validators.required]]
     });
   }
 
@@ -102,6 +124,18 @@ export class CustomerRegistrationComponent implements OnInit {
     return (!this.city && formField?.touched) ?? false;
   }
 
+  validateMonth(): boolean {
+    const formField = this.registerForm.get('cardExpirationMonth');
+
+    return (!this.cardExpirationMonth && formField?.touched) ?? false;
+  }
+
+  validateYear(): boolean {
+    const formField = this.registerForm.get('cardExpirationYear');
+
+    return (!this.cardExpirationYear && formField?.touched) ?? false;
+  }
+
   formatCpf(): void {
     if (this.cpf) {
       const cleanCpf = this.cpf.replace(/\D/g, '');
@@ -131,6 +165,18 @@ export class CustomerRegistrationComponent implements OnInit {
     }
   }
 
+  formatCardNumbebr(): void {
+    if (this.cardNumber) {
+      const cleanCardNumber = this.cardNumber.replace(/\D/g, '');
+
+      const chunkedNumbers = cleanCardNumber.match(/.{1,4}/g);
+
+      if (chunkedNumbers) {
+        this.cardNumber = chunkedNumbers.join(' ');
+      }
+    }
+  }
+
   addCharactere(text: string, charactere: string, position: number): string {
     const primeiraParte = text.slice(0, position);
     const segundaParte = text.slice(position);
@@ -138,7 +184,7 @@ export class CustomerRegistrationComponent implements OnInit {
     return primeiraParte + charactere + segundaParte;
   }
 
-  setState(event: Event) {
+  setState(event: Event): void {
     const target = event.target as HTMLSelectElement;
 
     if (Number(target.value) === 0) {
@@ -160,7 +206,7 @@ export class CustomerRegistrationComponent implements OnInit {
           this.city = null;
         }
       }
-      
+
       this.cityDictionary = {};
 
       const cityNames: string[] = filteredState
@@ -186,7 +232,7 @@ export class CustomerRegistrationComponent implements OnInit {
     }
   }
 
-  setCity(event: Event) {
+  setCity(event: Event): void {
     const target = event.target as HTMLSelectElement;
 
     if (Number(target.value) === 0) {
@@ -195,6 +241,59 @@ export class CustomerRegistrationComponent implements OnInit {
     else {
       this.city = target.value;
     }
+  }
+
+  setCardExpirationMonth(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+
+    if (Number(target.value) === 0) {
+      this.cardExpirationMonth = null;
+    }
+    else {
+      this.cardExpirationMonth = target.value;
+    }
+  }
+
+  setCardExpirationYear(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+
+    if (Number(target.value) === 0) {
+      this.cardExpirationYear = null;
+    }
+    else {
+      this.cardExpirationYear = target.value;
+    }
+  }
+
+  changePaymentMethod(method: EPaymentMethod): void {
+    if (method === EPaymentMethod.CreditCard) {
+      this.addCardValidators();
+    }
+    else {
+      this.removeCardValidators();
+    }
+
+    this.isCreditCard = method === EPaymentMethod.CreditCard;
+  }
+
+  addCardValidators(): void {
+    const cardFieldNames = ['cardHolderName', 'cardNumber', 'cardExpirationMonth', 'cardExpirationYear', 'cardSecurityCode'];
+
+    cardFieldNames.forEach(c => {
+      const cardHolderName = this.registerForm.get(c) as FormControl;
+      cardHolderName.setValidators([Validators.required]);
+      cardHolderName.updateValueAndValidity();
+    });
+  }
+
+  removeCardValidators(): void {
+    const cardFieldNames = ['cardHolderName', 'cardNumber', 'cardExpirationMonth', 'cardExpirationYear', 'cardSecurityCode'];
+
+    cardFieldNames.forEach(c => {
+      const cardHolderName = this.registerForm.get(c) as FormControl;
+      cardHolderName.clearValidators();
+      cardHolderName.updateValueAndValidity();
+    });
   }
 
   teste(): void {

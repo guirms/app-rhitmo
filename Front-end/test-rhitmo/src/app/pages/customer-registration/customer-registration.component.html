@@ -85,7 +85,73 @@
             </section>
 
             <div class="form-body__payment-container">
-                <p class="form-body__payment-container--text">Forma de pagamento</p>
+                <div class="form-body__payment-container__title">
+                    <p class="form-body__payment-container__title--text">Forma de pagamento</p>
+                </div>
+
+                <div class="form-body__payment-container__radios">
+                    <div class="form-body__payment-container__radios__option">
+                        <svg (click)="changePaymentMethod(1)" class="form-body__payment-container__radios__option--icon"
+                            xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none"
+                            style="margin-top: 3px;">
+                            <circle cx="10.5" cy="10.5" [attr.r]="isCreditCard ? '7' : '9.75'" fill="white"
+                                stroke="#377DC0" [attr.stroke-width]="isCreditCard ? '7' : '1.5'" />
+                        </svg>
+                        <label for="creditCardOption" class="form-body__payment-container__radios__option--text">Cartão
+                            de crédito</label>
+                    </div>
+
+                    <div class="form-body__payment-container__radios__option">
+                        <svg (click)="changePaymentMethod(2)" class="form-body__payment-container__radios__option--icon"
+                            xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none"
+                            style="margin-top: 3px;">
+                            <circle cx="10.5" cy="10.5" [attr.r]="isCreditCard ? '9.75' : '7'" fill="white"
+                                stroke="#377DC0" [attr.stroke-width]="isCreditCard ? '1.5' : '7'" />
+                        </svg>
+                        <label for="creditCardOption" class="form-body__payment-container__radios__option--text">Boleto
+                            Bancário</label>
+                    </div>
+                </div>
+
+                <section *ngIf="isCreditCard" class="form-body__name-date">
+                    <div class="form-body__name-date__name">
+                        <div class="form-body__field">
+                            <label for="customerCardHolderName">Nome do cartão</label>
+                            <input type="text" [(ngModel)]="cardHolderName" class="form-body__field--input"
+                                placeholder="Nome impresso no cartão" formControlName="cardHolderName">
+                            <p *ngIf="validateField('cardHolderName')" class="form-body__field--error-message">
+                                O nome do cartão é obrigatório
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-body__name-date__date">
+                        <div class="form-body__name-date__date__field">
+                            <label for="customerCardExpirationMonth">Data de Expiração</label>
+                            <select (change)="setCardExpirationMonth($event)" class="form-body__field--select"
+                                [ngStyle]="{color: cardExpirationMonth ? '#000000' : '#A9A9A9'}"
+                                formControlName="cardExpirationMonth">
+                                <option [value]="0">Mês</option>
+                                <option *ngFor="let month of monthDictionary | keyvalue" [value]="month.key">{{
+                                    month.value
+                                    }}</option>
+                            </select>
+                            <p *ngIf="validateMonth()" class="form-body__field--error-message">O mês é obrigatório</p>
+                        </div>
+
+                        <div class="form-body__name-date__date__field">
+                            <label for="customerCardExpirationYear"></label>
+                            <select (change)="setCardExpirationYear($event)" class="form-body__field--select"
+                                [ngStyle]="{color: cardExpirationYear ? '#000000' : '#A9A9A9'}"
+                                formControlName="cardExpirationYear">
+                                <option [value]="0">Ano</option>
+                                <option *ngFor="let year of yearDictionary | keyvalue" [value]="year.key">{{ year.value
+                                    }}</option>
+                            </select>
+                            <p *ngIf="validateYear()" class="form-body__field--error-message">O ano é obrigatório</p>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <button (click)="teste()">teste</button>

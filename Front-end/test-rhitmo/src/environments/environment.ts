@@ -1,6 +1,20 @@
 
 export const environment = {
   production: false,
+  months: [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+  ],
   brazilLocations: {
     States: [
       {

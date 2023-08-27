@@ -7,8 +7,3 @@ interface Locations {
     Name: string;
     Cities: string[];
 }
-
-export interface KeyAndValue{
-    key: number;
-    value: string;
-}

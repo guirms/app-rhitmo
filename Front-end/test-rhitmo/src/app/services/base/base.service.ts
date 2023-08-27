@@ -13,6 +13,6 @@ export class BaseService {
   constructor(private router: Router) { }
 
   navigate(url: string): void {
-    this.router.navigateByUrl('cadastro');
+    this.router.navigateByUrl(url);
   }
 }

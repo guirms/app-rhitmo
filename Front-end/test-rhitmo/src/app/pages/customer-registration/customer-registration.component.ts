@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EPaymentMethod } from 'src/app/objects/enums/EPaymentMethod';
+import { KeyAndValue } from 'src/app/objects/interfaces/generics';
 import { AddCustomerRequest } from 'src/app/objects/requests/AddCustomerRequest ';
 import { BaseService } from 'src/app/services/base/base.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
@@ -30,13 +31,10 @@ export class CustomerRegistrationComponent implements OnInit {
   cardExpirationMonth!: string | null;
   cardExpirationYear!: string | null;
 
-  cpfMaxLength = 11;
-  cepMaxLength = 8;
-
-  cityDictionary: { [key: number]: string } = {};
-  readonly stateDictionary: { [key: number]: string } = {};
-  readonly monthDictionary: { [key: number]: string } = {};
-  readonly yearDictionary: { [key: number]: string } = {};
+  cityList: KeyAndValue[] = [];
+  readonly stateList: KeyAndValue[] = [];
+  readonly monthList: KeyAndValue[] = [];
+  readonly yearList: KeyAndValue[] = [];
 
   constructor(private formBuilder: FormBuilder,
     private toastrService: ToastrService,
@@ -48,7 +46,10 @@ export class CustomerRegistrationComponent implements OnInit {
       .sort();
 
     for (let i = 0; i < stateNames.length; i++) {
-      this.stateDictionary[i + 1] = stateNames[i];
+      this.stateList.push({
+        key: i + 1,
+        value: stateNames[i]
+      });
     }
 
     const cityNames: string[] = environment.brazilLocations.States
@@ -56,13 +57,19 @@ export class CustomerRegistrationComponent implements OnInit {
       .sort();
 
     for (let i = 0; i < cityNames.length; i++) {
-      this.cityDictionary[i + 1] = cityNames[i];
+      this.cityList.push({
+        key: i + 1,
+        value: cityNames[i]
+      });
     }
 
-    const monthNames: string[] = environment.months.sort();
+    const monthNames: string[] = environment.months;
 
     for (let i = 0; i < monthNames.length; i++) {
-      this.monthDictionary[i + 1] = monthNames[i];
+      this.monthList.push({
+        key: i + 1,
+        value: monthNames[i]
+      });
     }
 
     const currentYear = new Date().getFullYear();
@@ -70,7 +77,10 @@ export class CustomerRegistrationComponent implements OnInit {
     const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
 
     for (let i = 0; i < yearNames.length; i++) {
-      this.yearDictionary[i + 1] = yearNames[i];
+      this.yearList.push({
+        key: i + 1,
+        value: yearNames[i]
+      });
     }
 
     this.setFields();
@@ -123,7 +133,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   submitClient(): void {
     if (!this.isFormValid()) {
-      this.toastrService.warning('Campos digitados incorretamente');
+      this.toastrService.warning('Há campos digitados incorretamente ou vazios');
       return;
     }
 
@@ -140,45 +150,47 @@ export class CustomerRegistrationComponent implements OnInit {
 
     if (this.isCreditCard) {
       addCustomerRequest.cardHolderName = this.cardHolderName,
-      addCustomerRequest.cardNumber = this.removeSpacesAndSpecialChars(this.cardNumber ?? ''),
-      addCustomerRequest.cardExpirationMonth = this.cardExpirationMonth,
-      addCustomerRequest.cardExpirationYear = this.cardExpirationYear,
-      addCustomerRequest.cardSecurityCode = this.cardSecurityCode
+        addCustomerRequest.cardNumber = this.removeSpacesAndSpecialChars(this.cardNumber ?? ''),
+        addCustomerRequest.cardExpirationMonth = ('0' + this.cardExpirationMonth).slice(-2),
+        addCustomerRequest.cardExpirationYear = this.yearList[Number(this.cardExpirationYear) - 1].value,
+        addCustomerRequest.cardSecurityCode = this.cardSecurityCode
     }
 
     const isEditing = this.sharedDataService.getData() ? this.sharedDataService.getData().isEditing : false;
 
     if (isEditing) {
       this.customerService.updateCustomer(addCustomerRequest)
-      .subscribe({
-        next: (result) => {
-          if (result.success) {
-            this.toastrService.success(result.message);
-          }
-          else {
-            this.toastrService.info(result.message);
-          }
-        },
-        error: (error) => {
-          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
-        },
-      });
-    } 
+        .subscribe({
+          next: (result) => {
+            if (result.success) {
+              this.toastrService.success(result.message);
+              this.baseService.navigate('');
+            }
+            else {
+              this.toastrService.info(result.message);
+            }
+          },
+          error: (error) => {
+            this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+          },
+        });
+    }
     else {
       this.customerService.saveCustomer(addCustomerRequest)
-      .subscribe({
-        next: (result) => {
-          if (result.success) {
-            this.toastrService.success(result.message);
-          }
-          else {
-            this.toastrService.info(result.message);
-          }
-        },
-        error: (error) => {
-          this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
-        },
-      });
+        .subscribe({
+          next: (result) => {
+            if (result.success) {
+              this.toastrService.success(result.message);
+              this.baseService.navigate('');
+            }
+            else {
+              this.toastrService.info(result.message);
+            }
+          },
+          error: (error) => {
+            this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+          },
+        });
     }
   }
 
@@ -198,8 +210,12 @@ export class CustomerRegistrationComponent implements OnInit {
     return (formField?.errors?.email && (formField?.dirty || formField?.touched)) ?? false;
   }
 
-  validateCpf(): boolean {
+  validateCpf(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cpf');
+
+    if (!this.cpf && isSubmitted) {
+      return true;
+    }
 
     if (formField) {
       return (this.cpf?.length !== 14 && formField?.touched) ?? false;
@@ -208,8 +224,12 @@ export class CustomerRegistrationComponent implements OnInit {
     return false;
   }
 
-  validateCep(): boolean {
+  validateCep(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cep');
+
+    if (!this.cep && isSubmitted) {
+      return true;
+    }
 
     if (formField) {
       return (this.cep?.length !== 12 && formField?.touched) ?? false;
@@ -218,8 +238,12 @@ export class CustomerRegistrationComponent implements OnInit {
     return false;
   }
 
-  validateCardNumber(): boolean {
+  validateCardNumber(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cardNumber');
+
+    if (!this.cardNumber && isSubmitted) {
+      return true;
+    }
 
     if (formField) {
       return (this.cardNumber?.length !== 19 && formField?.touched) ?? false;
@@ -228,8 +252,12 @@ export class CustomerRegistrationComponent implements OnInit {
     return false;
   }
 
-  validateCardSecurityCode(): boolean {
+  validateCardSecurityCode(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cardSecurityCode');
+
+    if (!this.cardSecurityCode && isSubmitted) {
+      return true;
+    }
 
     if (formField) {
       return (this.cardSecurityCode?.length !== 3 && formField?.touched) ?? false;
@@ -238,40 +266,50 @@ export class CustomerRegistrationComponent implements OnInit {
     return false;
   }
 
-  validateState(): boolean {
+  validateState(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('state');
+
+    if (!this.state && isSubmitted) {
+      return true;
+    }
+
 
     return (!this.state && formField?.touched) ?? false;
   }
 
-  validateCity(): boolean {
+  validateCity(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('city');
+
+    if (!this.city && isSubmitted) {
+      return true;
+    }
 
     return (!this.city && formField?.touched) ?? false;
   }
 
-  validateMonth(): boolean {
+  validateMonth(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cardExpirationMonth');
+
+    if (!this.cardExpirationMonth && isSubmitted) {
+      return true;
+    }
 
     return (!this.cardExpirationMonth && formField?.touched) ?? false;
   }
 
-  validateYear(): boolean {
+  validateYear(isSubmitted?: boolean): boolean {
     const formField = this.registerForm.get('cardExpirationYear');
 
+    if (!this.cardExpirationYear && isSubmitted) {
+      return true;
+    }
+    
     return (!this.cardExpirationYear && formField?.touched) ?? false;
   }
 
   formatCpf(): void {
     if (this.cpf) {
       const cleanCpf = this.cpf.replace(/\D/g, '');
-
-      if (cleanCpf.length === 11) {
-        this.cpfMaxLength = 14;
-      }
-      else {
-        this.cpfMaxLength = 11;
-      }
 
       this.cpf = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "\$1.\$2.\$3-\$4");
     }
@@ -280,13 +318,6 @@ export class CustomerRegistrationComponent implements OnInit {
   formatCep(): void {
     if (this.cep) {
       const cleanCep = this.cep.replace(/\D/g, '');
-
-      if (cleanCep.length === 8) {
-        this.cepMaxLength = 12;
-      }
-      else {
-        this.cepMaxLength = 8;
-      }
 
       this.cep = cleanCep.replace(/(\d{2})(\d{3})(\d{3})/g, '$1.$2 - $3');
     }
@@ -320,34 +351,37 @@ export class CustomerRegistrationComponent implements OnInit {
     }
     else {
       this.state = target.value;
-      this.cityDictionary = {};
+      this.cityList = [];
 
       const filteredState = environment.brazilLocations.States
-        .filter(s => s.Name === this.stateDictionary[Number(this.state)]);
+        .filter(s => s.Name === this.stateList[Number(this.state)].value);
 
       if (this.city) {
         const cityExists = filteredState
-          .some(c => c.Cities.some(c => c === this.cityDictionary[Number(this.city)]));
+          .some(c => c.Cities.some(c => c === this.cityList[Number(this.city)].value));
 
         if (!cityExists) {
           this.city = null;
         }
       }
 
-      this.cityDictionary = {};
+      this.cityList = [];
 
       const cityNames: string[] = filteredState
         .flatMap(state => state.Cities)
         .sort();
 
       for (let i = 0; i < cityNames.length; i++) {
-        this.cityDictionary[i + 1] = cityNames[i];
+        this.cityList.push({
+          key: i + 1,
+          value: cityNames[i]
+        });
       }
     }
   }
 
   clearCity(): void {
-    this.cityDictionary = {};
+    this.cityList = [];
     this.city = null;
 
     const cityNames: string[] = environment.brazilLocations.States
@@ -355,7 +389,10 @@ export class CustomerRegistrationComponent implements OnInit {
       .sort();
 
     for (let i = 0; i < cityNames.length; i++) {
-      this.cityDictionary[i + 1] = cityNames[i];
+      this.cityList.push({
+        key: i + 1,
+        value: cityNames[i]
+      });
     }
   }
 
@@ -424,8 +461,13 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   private isFormValid(): boolean {
-    return !this.registerForm.invalid && !this.validateCardNumber() && !this.validateCardSecurityCode() && !this.validateCity()
-    && !this.validateCpf() && !this.validateEmail() && !this.validateMonth() && !this.validateState() && !this.validateYear(); 
+    if (this.isCreditCard) {
+      return !this.registerForm.invalid && !this.validateCardNumber(true) && !this.validateCardSecurityCode(true) && !this.validateCity(true)
+        && !this.validateCpf(true) && !this.validateEmail() && !this.validateMonth(true) && !this.validateState(true) && !this.validateYear(true);
+    }
+    
+    return !this.registerForm.invalid && !this.validateCity(true)
+    && !this.validateCpf(true) && !this.validateEmail() && !this.validateState(true);
   }
 
 }

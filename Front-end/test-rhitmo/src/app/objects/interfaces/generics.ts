@@ -29,3 +29,8 @@ export interface CustomerSharedData {
     insertedAt?: string;
     creditCardDto?: CreditCardDto | null;
 }
+
+export interface KeyAndValue {
+    key: number,
+    value: string
+}

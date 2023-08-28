@@ -35,6 +35,8 @@ export class CustomerRegistrationComponent implements OnInit {
 
   statePosition = 0;
   cityPosition = 0;
+  monthPosition = 0;
+  yearPosition = 0;
 
   readonly stateList: KeyAndValue[] = [];
   readonly monthList: KeyAndValue[] = [];
@@ -58,14 +60,14 @@ export class CustomerRegistrationComponent implements OnInit {
       cep: ['', [Validators.required]],
       city: [this.cityPosition, [Validators.required]],
       cardHolderName: ['', [Validators.required]],
-      cardExpirationMonth: [0, [Validators.required]],
-      cardExpirationYear: [0, [Validators.required]],
+      cardExpirationMonth: [this.monthPosition, [Validators.required]],
+      cardExpirationYear: [this.yearPosition, [Validators.required]],
       cardNumber: ['', [Validators.required]],
       cardSecurityCode: ['', [Validators.required]]
     });
   }
 
-  submitClient(): void {
+  submitCustomer(): void {
     if (!this.isFormValid()) {
       this.toastrService.warning('Há campos digitados incorretamente ou vazios');
       return;
@@ -389,7 +391,7 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   private isFormValid(): boolean {
-    if (!this.customerId && !this.registerForm.invalid) {
+    if (!this.customerId && this.registerForm.invalid) {
       return false;
     }
 
@@ -408,6 +410,26 @@ export class CustomerRegistrationComponent implements OnInit {
     const stateNames: string[] = environment.brazilLocations.States.map(s => s.Name)
       .sort();
 
+    const monthNames: string[] = environment.months;
+
+    for (let i = 0; i < monthNames.length; i++) {
+      this.monthList.push({
+        key: i + 1,
+        value: monthNames[i]
+      });
+    }
+
+    const currentYear = new Date().getFullYear();
+    const futureYears = 20;
+    const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
+
+    for (let i = 0; i < yearNames.length; i++) {
+      this.yearList.push({
+        key: i + 1,
+        value: yearNames[i]
+      });
+    }
+
     for (let i = 0; i < stateNames.length; i++) {
       this.stateList.push({
         key: i + 1,
@@ -415,10 +437,6 @@ export class CustomerRegistrationComponent implements OnInit {
       });
     }
 
-    this.name = sharedData.name;
-    this.email = sharedData.email;
-    this.cpf = sharedData.cpf;
-    
     if (!sharedData || !sharedData.customerId) {
       const cityNames: string[] = environment.brazilLocations.States
         .flatMap(state => state.Cities)
@@ -433,6 +451,10 @@ export class CustomerRegistrationComponent implements OnInit {
 
       return;
     }
+
+    this.name = sharedData.name;
+    this.email = sharedData.email;
+    this.cpf = sharedData.cpf;
 
     this.customerId = sharedData.customerId
 
@@ -457,26 +479,6 @@ export class CustomerRegistrationComponent implements OnInit {
         this.cityPosition = this.cityList.filter(s => s.value === sharedData.city)[0].key;
       }
 
-      const monthNames: string[] = environment.months;
-
-      for (let i = 0; i < monthNames.length; i++) {
-        this.monthList.push({
-          key: i + 1,
-          value: monthNames[i]
-        });
-      }
-
-      const currentYear = new Date().getFullYear();
-      const futureYears = 20;
-      const yearNames = Array.from({ length: futureYears }, (_, index) => (currentYear + index).toString()).sort();
-
-      for (let i = 0; i < yearNames.length; i++) {
-        this.yearList.push({
-          key: i + 1,
-          value: yearNames[i]
-        });
-      }
-
       this.address = sharedData.address;
       this.cep = sharedData.cep;
       this.state = this.stateList.filter(s => s.value === sharedData.state)[0].key.toString();
@@ -486,9 +488,12 @@ export class CustomerRegistrationComponent implements OnInit {
       if (this.isCreditCard && sharedData.creditCardDto) {
         this.cardHolderName = sharedData.creditCardDto.name;
         this.cardNumber = sharedData.creditCardDto.number;
-        this.cardExpirationMonth = sharedData.creditCardDto.expirationMonth;
-        this.cardExpirationYear = sharedData.creditCardDto.expirationYear;
+        this.cardExpirationMonth = this.monthList.filter(m => m.key === Number(sharedData.creditCardDto?.expirationMonth))[0].key.toString();
+        this.cardExpirationYear = this.yearList.filter(y => y.value === sharedData.creditCardDto?.expirationYear)[0].key.toString();
         this.cardSecurityCode = sharedData.creditCardDto.securityCode;
+
+        this.monthPosition = Number(sharedData.creditCardDto?.expirationMonth);
+        this.yearPosition = Number(this.cardExpirationYear);
       }
     }
   }

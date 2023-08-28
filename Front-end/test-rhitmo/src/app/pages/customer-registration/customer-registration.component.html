@@ -9,7 +9,7 @@
     </section>
 
     <main>
-        <form class="form-body" [formGroup]="registerForm" #formDir="ngForm" (ngSubmit)="submitClient()">
+        <form class="form-body" [formGroup]="registerForm" #formDir="ngForm" (ngSubmit)="submitCustomer()">
             <div class="form-body__field">
                 <label for="customerName">Nome</label>
                 <input type="text" [(ngModel)]="name" class="form-body__field--input" placeholder="Digite seu nome"

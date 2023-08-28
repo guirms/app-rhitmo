@@ -22,7 +22,7 @@ export class CustomerRegistrationComponent implements OnInit {
   cpf!: string;
   address!: string;
   state!: string | null;
-  cep!: string;
+  cep!: string | null;
   city!: string | null;
   isCreditCard = true;
   cardHolderName!: string | null;
@@ -79,7 +79,7 @@ export class CustomerRegistrationComponent implements OnInit {
       cpf: this.removeSpacesAndSpecialChars(this.cpf),
       address: this.address,
       state: this.stateList.filter(s => s.key === Number(this.state))[0].value ?? '',
-      cep: this.removeSpacesAndSpecialChars(this.cep),
+      cep: this.removeSpacesAndSpecialChars(this.cep ?? ''),
       city: this.cityList.filter(c => c.key === Number(this.city))[0].value ?? '',
       paymentMethod: this.isCreditCard ? 1 : 2,
     }
@@ -251,6 +251,53 @@ export class CustomerRegistrationComponent implements OnInit {
       const cleanCep = this.cep.replace(/\D/g, '');
 
       this.cep = cleanCep.replace(/(\d{2})(\d{3})(\d{3})/g, '$1.$2 - $3');
+
+      if (cleanCep.length === 8) {
+        this.customerService.getLocationByCep(cleanCep)
+          .subscribe({
+            next: async (result) => {
+              if (result.success) {
+                let statePosition = 0;
+                let cityPosition = 0;
+
+                const brazilLocations = environment.brazilLocations.States;
+
+                this.cityList = [];
+
+                for (let i = 0; i < brazilLocations.length; i++) {
+                  if (brazilLocations[i].Name === result.data.state) {
+                    statePosition = i + 1;
+
+                    for (let j = 0; j < brazilLocations[i].Cities.length; j++) {
+                      this.cityList.push({
+                        key: j + 1,
+                        value: brazilLocations[i].Cities[j]
+                      });
+
+                      if (brazilLocations[i].Cities[j] === result.data.city) {
+                        cityPosition = j + 1;
+                      }
+                    }
+                  }
+                }
+
+                this.registerForm.get('state')?.patchValue(statePosition);
+                this.state = statePosition.toString();
+
+                await new Promise(f => setTimeout(f, 1000));
+
+                this.registerForm.get('city')?.patchValue(cityPosition);
+                this.city = cityPosition.toString();
+              }
+              else {
+                this.clearCity();
+              }
+            },
+            error: (error) => {
+              this.toastrService.error(`Ocorreu um erro durante a comunicação com o serviço. Status: ${error.status}`);
+            },
+          });
+      }
     }
   }
 
@@ -275,6 +322,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   setState(event: Event): void {
     const target = event.target as HTMLSelectElement;
+    this.cep = null;
 
     if (Number(target.value) === 0) {
       this.clearCity();
@@ -442,8 +490,8 @@ export class CustomerRegistrationComponent implements OnInit {
       this.email = sharedData.email;
       this.cpf = sharedData.cpf;
     }
-    
-    if (!sharedData.customerId) {
+
+    if (!sharedData || !sharedData.customerId) {
       const cityNames: string[] = environment.brazilLocations.States
         .flatMap(state => state.Cities)
         .sort();

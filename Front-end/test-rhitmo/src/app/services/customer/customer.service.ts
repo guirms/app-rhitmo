@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { NoContentResponse } from 'src/app/objects/interfaces/generics';
 import { AddCustomerRequest } from 'src/app/objects/requests/AddCustomerRequest ';
 import { DefaultResponse } from 'src/app/objects/responses/CustomersToGridResponse';
+import { LocationResponse } from 'src/app/objects/responses/LocationByCepResponse';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -31,6 +32,12 @@ export class CustomerService {
     const params = new HttpParams().set('customerId', customerId);
 
     return this.http.delete<NoContentResponse>(environment.apiUrl + 'Customer/DeleteCustomer', { params });
+  }
+
+  getLocationByCep(cep: string): Observable<LocationResponse> {
+    const params = new HttpParams().set('cep', cep);
+
+    return this.http.get<LocationResponse>(environment.apiUrl + 'Location/GetLocationByCep', { params }); 
   }
 
   formatCpf(cpf: string): string {

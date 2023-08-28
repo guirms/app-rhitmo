@@ -1,6 +1,5 @@
-﻿using Domain.Models.Enums;
-using Domain.Models;
-using Domain.External.Objects.Dto_s.CreditCard;
+﻿using Domain.External.Objects.Dto_s.CreditCard;
+using Domain.Models.Enums;
 
 namespace Domain.Objects.Responses
 {

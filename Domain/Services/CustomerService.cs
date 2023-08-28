@@ -34,7 +34,7 @@ public class CustomerService : ICustomerService
         foreach (var customer in customersToGrid)
         {
             if (customer.PaymentMethod == EPaymentMethod.CreditCard && customer.CreditCardDto != null)
-                customer.CreditCardDto.Number = 
+                customer.CreditCardDto.Number =
                     FormatCreditCardNumber(StringEncryptionService.DecryptString(_configuration["SecretKey"].GetSafeValue(), customer.CreditCardDto.Number));
         }
 

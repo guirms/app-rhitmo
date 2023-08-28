@@ -49,8 +49,8 @@ public class AutoMapper : Profile
     private void LocationMap()
     {
         CreateMap<LocationByCepDto, LocationByCepResponse>()
-            .ForMember(l => l.Cidade, opts => opts.MapFrom(l => l.Localidade))
-            .ForMember(l => l.Estado, opts => opts.MapFrom(l => l.Uf.GetState()));
+            .ForMember(l => l.City, opts => opts.MapFrom(l => l.Localidade))
+            .ForMember(l => l.State, opts => opts.MapFrom(l => l.Uf.GetState()));
     }
 
     #region Private methods

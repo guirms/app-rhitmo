@@ -2,7 +2,7 @@
 {
     public record LocationByCepResponse
     {
-        public required string Estado { get; set; }
-        public required string Cidade { get; set; }
+        public required string State { get; set; }
+        public required string City { get; set; }
     }
 }

@@ -38,7 +38,6 @@ public class AutoMapper : Profile
             .ForMember(c => c.ExpirationYear, opts => opts.MapFrom(a => a.CardExpirationYear))
             .ForMember(c => c.SecurityCode, opts => opts.MapFrom(a => a.CardSecurityCode));
 
-
         CreateMap<CreditCard, CreditCardDto>();
     }
 

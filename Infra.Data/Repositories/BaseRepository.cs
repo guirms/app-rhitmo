@@ -1,5 +1,6 @@
 ﻿using Infra.Data.Context;
 using Infra.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Data.Repositories;
 

@@ -7,4 +7,5 @@ public interface ICustomerRepository : IBaseRepository<Customer>
 {
     Task<bool> GetCustomerWithSameCredentials(string cpf, string email, int? userExceptId = null);
     Task<List<CustomersToGridResponse>> GetCustomersToGrid();
+    Task<Customer?> GetCustomerById(int customerId);
 }

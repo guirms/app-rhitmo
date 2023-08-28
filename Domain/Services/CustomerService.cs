@@ -71,7 +71,7 @@ public class CustomerService : ICustomerService
 
     public async Task UpdateCustomer(AddCustomerRequest updateCustomerRequest, int customerId)
     {
-        var customer = await _customerRepository.GetByIdAsync(customerId)
+        var customer = await _customerRepository.GetCustomerById(customerId)
             ?? throw new InvalidOperationException("Não existe nenhum usuário com os dados informados");
 
         var hasCustomerWithSameCredentials = await _customerRepository
@@ -80,24 +80,34 @@ public class CustomerService : ICustomerService
         if (hasCustomerWithSameCredentials)
             throw new InvalidOperationException("Já existe um usuário com esse CPF ou E-mail");
 
+        var oldInsertedAt = customer.InsertedAt;
+
         customer = _mapper.Map(updateCustomerRequest, customer);
 
         var currentDateTime = DateTime.Now;
 
-        if (updateCustomerRequest.PaymentMethod != customer.PaymentMethod)
+        if (updateCustomerRequest.PaymentMethod == EPaymentMethod.CreditCard)
         {
-            if (updateCustomerRequest.PaymentMethod == EPaymentMethod.CreditCard)
+            customer.CreditCard = _mapper.Map(updateCustomerRequest, customer.CreditCard);
+
+            if (customer.CreditCard != null)
             {
-                customer.CreditCard = _mapper.Map<CreditCard>(updateCustomerRequest);
+                customer.CreditCard.InsertedAt = oldInsertedAt;
                 customer.CreditCard.UpdatedAt = currentDateTime;
             }
-            else
+        }
+        else
+        {
+            customer.BankSlip = _mapper.Map(updateCustomerRequest, customer.BankSlip);
+
+            if (customer.BankSlip != null)
             {
-                customer.BankSlip = _mapper.Map<BankSlip>(updateCustomerRequest);
+                customer.BankSlip.InsertedAt = oldInsertedAt;
                 customer.BankSlip.UpdatedAt = currentDateTime;
             }
         }
 
+        customer.InsertedAt = oldInsertedAt;
         customer.UpdatedAt = currentDateTime;
 
         await _customerRepository.UpdateAsync(customer);

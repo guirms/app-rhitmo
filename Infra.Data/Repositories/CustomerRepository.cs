@@ -37,4 +37,11 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
         return _mapper.ProjectTo<CustomersToGridResponse>(customer.AsQueryable()).ToList();
     }
 
+    public async Task<Customer?> GetCustomerById(int customerId)
+    {
+        return await _context.Set<Customer>()
+            .Include(c => c.CreditCard)
+            .Include(c => c.BankSlip)
+            .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+    }
 }

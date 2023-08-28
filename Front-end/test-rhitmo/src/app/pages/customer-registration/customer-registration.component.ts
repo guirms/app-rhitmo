@@ -405,8 +405,6 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   private setFields(): void {
-    const sharedData = this.sharedDataService.getData();
-
     const stateNames: string[] = environment.brazilLocations.States.map(s => s.Name)
       .sort();
 
@@ -437,7 +435,15 @@ export class CustomerRegistrationComponent implements OnInit {
       });
     }
 
-    if (!sharedData || !sharedData.customerId) {
+    const sharedData = this.sharedDataService.getData();
+
+    if (sharedData) {
+      this.name = sharedData.name;
+      this.email = sharedData.email;
+      this.cpf = sharedData.cpf;
+    }
+    
+    if (!sharedData.customerId) {
       const cityNames: string[] = environment.brazilLocations.States
         .flatMap(state => state.Cities)
         .sort();
@@ -451,10 +457,6 @@ export class CustomerRegistrationComponent implements OnInit {
 
       return;
     }
-
-    this.name = sharedData.name;
-    this.email = sharedData.email;
-    this.cpf = sharedData.cpf;
 
     this.customerId = sharedData.customerId
 
